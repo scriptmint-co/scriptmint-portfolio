@@ -8,11 +8,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400;1,9..144,700&display=swap" rel="stylesheet"/>
 <style>
-/* ==============================================
-   DESIGN SYSTEM
-   Palette C: Near-Black + Off-white + Rust
-   Font: Outfit (sans UI) + Fraunces (italic serif)
-============================================== */
 :root {
   --obsidian:   #0f0e0c;
   --carbon:     #1c1b18;
@@ -24,993 +19,275 @@
   --off-white:  #f4f2ed;
   --paper:      #f9f7f3;
   --white:      #ffffff;
-
   --rust:       #c96040;
   --rust-deep:  #a84e32;
   --rust-soft:  rgba(201,96,64,.12);
   --rust-mid:   rgba(201,96,64,.25);
-
-  /* text on light */
   --ink:        #0f0e0c;
   --ink-soft:   #2a2926;
   --ink-mid:    rgba(15,14,12,.55);
   --ink-dim:    rgba(15,14,12,.32);
   --ink-ghost:  rgba(15,14,12,.09);
-
-  /* text on dark */
   --light:      #f4f2ed;
   --light-soft: rgba(244,242,237,.65);
   --light-mid:  rgba(244,242,237,.38);
   --light-dim:  rgba(244,242,237,.18);
   --light-ghost:rgba(244,242,237,.07);
-
   --line-dark:  rgba(244,242,237,.08);
   --line-light: rgba(15,14,12,.09);
-
   --f-ui:       'Outfit', system-ui, sans-serif;
   --f-display:  'Fraunces', Georgia, serif;
-
   --ease:       cubic-bezier(0.25,0.46,0.45,0.94);
   --spring:     cubic-bezier(0.16,1,0.3,1);
   --snap:       cubic-bezier(0.55,0,1,0.45);
 }
-
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;font-size:16px;}
-body{
-  background:var(--obsidian);
-  color:var(--light);
-  font-family:var(--f-ui);
-  line-height:1.6;
-  overflow-x:hidden;
-  cursor:none;
-}
+body{background:var(--obsidian);color:var(--light);font-family:var(--f-ui);line-height:1.6;overflow-x:hidden;cursor:none;}
 ::selection{background:var(--rust);color:var(--white);}
 
-/* ==============================================
-   CURSOR
-============================================== */
-#cur{
-  position:fixed;width:7px;height:7px;
-  background:var(--rust);border-radius:50%;
-  pointer-events:none;z-index:9999;
-  transform:translate(-50%,-50%);
-  transition:width .25s var(--spring),height .25s var(--spring),background .2s;
-  mix-blend-mode:normal;
-}
-#cur-ring{
-  position:fixed;width:32px;height:32px;
-  border:1.5px solid rgba(201,96,64,.45);border-radius:50%;
-  pointer-events:none;z-index:9998;
-  transform:translate(-50%,-50%);
-  transition:width .45s var(--spring),height .45s var(--spring),border-color .3s,opacity .3s;
-}
+#cur{position:fixed;width:7px;height:7px;background:var(--rust);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .25s var(--spring),height .25s var(--spring),background .2s;mix-blend-mode:normal;}
+#cur-ring{position:fixed;width:32px;height:32px;border:1.5px solid rgba(201,96,64,.45);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .45s var(--spring),height .45s var(--spring),border-color .3s,opacity .3s;}
 #cur.big{width:16px;height:16px;}
 #cur-ring.big{width:56px;height:56px;border-color:rgba(201,96,64,.2);}
 #cur.click{transform:translate(-50%,-50%) scale(.75);}
 
-/* ==============================================
-   SMOOTH SCROLL REVEAL
-============================================== */
-.scene{
-  opacity:0;
-  transform:translateY(32px);
-  transition:opacity .9s var(--spring),transform .9s var(--spring);
-}
+.scene{opacity:0;transform:translateY(32px);transition:opacity .9s var(--spring),transform .9s var(--spring);}
 .scene.in{opacity:1;transform:none;}
 .scene-delay-1{transition-delay:.1s;}
 .scene-delay-2{transition-delay:.2s;}
 .scene-delay-3{transition-delay:.3s;}
 .scene-delay-4{transition-delay:.4s;}
-.scene-split{
-  opacity:0;clip-path:inset(0 0 100% 0);
-  transition:opacity .8s var(--spring),clip-path .8s var(--spring);
-}
+.scene-split{opacity:0;clip-path:inset(0 0 100% 0);transition:opacity .8s var(--spring),clip-path .8s var(--spring);}
 .scene-split.in{opacity:1;clip-path:inset(0 0 0% 0);}
 
-/* ==============================================
-   NAVBAR
-============================================== */
-nav{
-  position:fixed;top:0;left:0;right:0;z-index:600;
-  height:64px;padding:0 4rem;
-  display:flex;align-items:center;justify-content:space-between;
-  transition:background .5s var(--ease),border-color .5s;
-  border-bottom:1px solid transparent;
-}
-nav.stuck{
-  background:rgba(15,14,12,.92);
-  backdrop-filter:blur(20px);
-  border-bottom-color:var(--line-dark);
-}
-.nav-brand{
-  display:flex;align-items:center;gap:.5rem;
-  text-decoration:none;
-}
-.nav-brand-name{
-  font-family:var(--f-ui);font-size:.78rem;font-weight:700;
-  letter-spacing:.2em;text-transform:uppercase;color:var(--light);
-}
-.nav-dot{
-  width:5px;height:5px;border-radius:50%;
-  background:var(--rust);flex-shrink:0;
-}
-.nav-links{
-  display:flex;gap:2.5rem;list-style:none;
-  position:absolute;left:50%;transform:translateX(-50%);
-}
-.nav-links a{
-  font-size:.72rem;font-weight:400;letter-spacing:.08em;
-  color:var(--light-mid);text-decoration:none;
-  transition:color .2s;position:relative;
-}
-.nav-links a::after{
-  content:'';position:absolute;bottom:-2px;left:0;right:0;
-  height:1px;background:var(--rust);
-  transform:scaleX(0);transform-origin:left;
-  transition:transform .3s var(--spring);
-}
+nav{position:fixed;top:0;left:0;right:0;z-index:600;height:64px;padding:0 4rem;display:flex;align-items:center;justify-content:space-between;transition:background .5s var(--ease),border-color .5s;border-bottom:1px solid transparent;}
+nav.stuck{background:rgba(15,14,12,.92);backdrop-filter:blur(20px);border-bottom-color:var(--line-dark);}
+.nav-brand{display:flex;align-items:center;gap:.5rem;text-decoration:none;}
+.nav-brand-name{font-family:var(--f-ui);font-size:.78rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--light);}
+.nav-dot{width:5px;height:5px;border-radius:50%;background:var(--rust);flex-shrink:0;}
+.nav-links{display:flex;gap:2.5rem;list-style:none;position:absolute;left:50%;transform:translateX(-50%);}
+.nav-links a{font-size:.72rem;font-weight:400;letter-spacing:.08em;color:var(--light-mid);text-decoration:none;transition:color .2s;position:relative;}
+.nav-links a::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:1px;background:var(--rust);transform:scaleX(0);transform-origin:left;transition:transform .3s var(--spring);}
 .nav-links a:hover{color:var(--light);}
 .nav-links a:hover::after{transform:scaleX(1);}
-.nav-cta-btn{
-  font-size:.68rem;font-weight:600;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--obsidian);
-  background:var(--rust);padding:.55rem 1.5rem;
-  border-radius:2px;text-decoration:none;
-  transition:background .25s,transform .2s;
-}
+.nav-cta-btn{font-size:.68rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--obsidian);background:var(--rust);padding:.55rem 1.5rem;border-radius:2px;text-decoration:none;transition:background .25s,transform .2s;}
 .nav-cta-btn:hover{background:var(--rust-deep);transform:translateY(-1px);}
 
-/* ==============================================
-   SECTION UTILITY
-============================================== */
-.eyebrow{
-  display:inline-flex;align-items:center;gap:.7rem;
-  font-size:.62rem;font-weight:600;letter-spacing:.22em;
-  text-transform:uppercase;color:var(--rust);
-  margin-bottom:1.6rem;
-}
+.eyebrow{display:inline-flex;align-items:center;gap:.7rem;font-size:.62rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--rust);margin-bottom:1.6rem;}
 .eyebrow-line{width:24px;height:1px;background:var(--rust);flex-shrink:0;}
-
-/* dark section shared */
 .section-dark{background:var(--obsidian);color:var(--light);}
 .section-carbon{background:var(--carbon);color:var(--light);}
-/* light section */
 .section-light{background:var(--off-white);color:var(--ink);}
 .section-paper{background:var(--paper);color:var(--ink);}
 
-/* ==============================================
-   HERO — FULL SCREEN, CINEMATIC
-============================================== */
-.hero{
-  min-height:100vh;display:grid;
-  grid-template-rows:1fr auto;
-  background:var(--obsidian);
-  position:relative;overflow:hidden;
-}
-
-/* animated grid lines */
-.hero-grid{
-  position:absolute;inset:0;pointer-events:none;
-  background-image:
-    linear-gradient(var(--light-ghost) 1px,transparent 1px),
-    linear-gradient(90deg,var(--light-ghost) 1px,transparent 1px);
-  background-size:80px 80px;
-  mask-image:radial-gradient(ellipse 80% 80% at 50% 40%,black 40%,transparent 100%);
-  opacity:.5;
-}
-
-.hero-inner{
-  display:grid;grid-template-columns:1fr 1fr;
-  min-height:calc(100vh - 64px);
-  padding-top:64px;position:relative;z-index:2;
-}
-
-.hero-left{
-  padding:7rem 4rem 5rem;
-  display:flex;flex-direction:column;
-  justify-content:space-between;
-  border-right:1px solid var(--line-dark);
-}
-.hero-overline{
-  font-size:.62rem;font-weight:600;letter-spacing:.25em;
-  text-transform:uppercase;color:var(--rust);
-  margin-bottom:2.5rem;
-  opacity:0;animation:fadeUp .8s var(--spring) .1s forwards;
-}
-.hero-h1{
-  font-family:var(--f-ui);font-weight:800;
-  font-size:clamp(3rem,5.8vw,6.2rem);
-  line-height:1.03;letter-spacing:-.03em;
-  color:var(--light);
-  opacity:0;animation:fadeUp .9s var(--spring) .25s forwards;
-}
-.hero-h1 em{
-  font-family:var(--f-display);font-style:italic;font-weight:300;
-  color:var(--rust);letter-spacing:-.01em;
-}
-.hero-sub{
-  font-size:1.02rem;font-weight:300;color:var(--light-soft);
-  line-height:1.8;max-width:380px;margin-top:2rem;
-  opacity:0;animation:fadeUp .9s var(--spring) .4s forwards;
-}
-.hero-actions{
-  display:flex;flex-direction:column;gap:1rem;margin-top:3.5rem;
-  opacity:0;animation:fadeUp .9s var(--spring) .55s forwards;
-}
-.btn-rust{
-  display:inline-flex;align-items:center;gap:.8rem;
-  background:var(--rust);color:var(--white);
-  font-size:.72rem;font-weight:600;letter-spacing:.12em;
-  text-transform:uppercase;padding:.95rem 2rem;
-  text-decoration:none;border-radius:2px;width:fit-content;
-  transition:background .25s,transform .2s;
-}
+/* HERO */
+.hero{min-height:100vh;display:grid;grid-template-rows:1fr auto;background:var(--obsidian);position:relative;overflow:hidden;}
+.hero-grid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(var(--light-ghost) 1px,transparent 1px),linear-gradient(90deg,var(--light-ghost) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse 80% 80% at 50% 40%,black 40%,transparent 100%);opacity:.5;}
+.hero-inner{display:grid;grid-template-columns:1fr 1fr;min-height:calc(100vh - 64px);padding-top:64px;position:relative;z-index:2;}
+.hero-left{padding:7rem 4rem 5rem;display:flex;flex-direction:column;justify-content:space-between;border-right:1px solid var(--line-dark);}
+.hero-overline{font-size:.62rem;font-weight:600;letter-spacing:.25em;text-transform:uppercase;color:var(--rust);margin-bottom:2.5rem;opacity:0;animation:fadeUp .8s var(--spring) .1s forwards;}
+.hero-h1{font-family:var(--f-ui);font-weight:800;font-size:clamp(3rem,5.8vw,6.2rem);line-height:1.03;letter-spacing:-.03em;color:var(--light);opacity:0;animation:fadeUp .9s var(--spring) .25s forwards;}
+.hero-h1 em{font-family:var(--f-display);font-style:italic;font-weight:300;color:var(--rust);letter-spacing:-.01em;}
+.hero-sub{font-size:1.02rem;font-weight:300;color:var(--light-soft);line-height:1.8;max-width:380px;margin-top:2rem;opacity:0;animation:fadeUp .9s var(--spring) .4s forwards;}
+.hero-actions{display:flex;flex-direction:column;gap:1rem;margin-top:3.5rem;opacity:0;animation:fadeUp .9s var(--spring) .55s forwards;}
+.btn-rust{display:inline-flex;align-items:center;gap:.8rem;background:var(--rust);color:var(--white);font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:.95rem 2rem;text-decoration:none;border-radius:2px;width:fit-content;transition:background .25s,transform .2s;}
 .btn-rust:hover{background:var(--rust-deep);transform:translateX(4px);}
 .btn-rust .arr{transition:transform .2s;}
 .btn-rust:hover .arr{transform:translateX(4px);}
-.btn-ghost-light{
-  display:inline-flex;align-items:center;gap:.5rem;
-  font-size:.72rem;font-weight:400;letter-spacing:.08em;
-  color:var(--light-mid);text-decoration:none;
-  border-bottom:1px solid var(--light-dim);
-  padding-bottom:.15rem;width:fit-content;
-  transition:color .2s,border-color .2s;
-}
+.btn-ghost-light{display:inline-flex;align-items:center;gap:.5rem;font-size:.72rem;font-weight:400;letter-spacing:.08em;color:var(--light-mid);text-decoration:none;border-bottom:1px solid var(--light-dim);padding-bottom:.15rem;width:fit-content;transition:color .2s,border-color .2s;}
 .btn-ghost-light:hover{color:var(--light);border-color:var(--light-soft);}
-
-.hero-stats{
-  display:flex;gap:0;
-  padding-top:2.5rem;border-top:1px solid var(--line-dark);
-  opacity:0;animation:fadeUp .9s var(--spring) .7s forwards;
-}
-.hero-stat{
-  flex:1;padding-right:2rem;
-  border-right:1px solid var(--line-dark);margin-right:2rem;
-}
+.hero-stats{display:flex;gap:0;padding-top:2.5rem;border-top:1px solid var(--line-dark);opacity:0;animation:fadeUp .9s var(--spring) .7s forwards;}
+.hero-stat{flex:1;padding-right:2rem;border-right:1px solid var(--line-dark);margin-right:2rem;}
 .hero-stat:last-child{border-right:none;margin-right:0;}
-.stat-n{
-  font-family:var(--f-ui);font-size:2.4rem;font-weight:700;
-  color:var(--light);letter-spacing:-.03em;line-height:1;
-}
-.stat-l{
-  font-size:.62rem;font-weight:400;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--light-mid);margin-top:.4rem;
-}
-
-/* Right side: stacked service rows */
-.hero-right{
-  padding:7rem 4rem 5rem;
-  display:flex;flex-direction:column;justify-content:space-between;
-  opacity:0;animation:fadeIn 1.1s var(--ease) .5s forwards;
-}
-.hero-right-label{
-  font-size:.6rem;font-weight:600;letter-spacing:.2em;
-  text-transform:uppercase;color:var(--light-dim);margin-bottom:1.8rem;
-}
+.stat-n{font-family:var(--f-ui);font-size:2.4rem;font-weight:700;color:var(--light);letter-spacing:-.03em;line-height:1;}
+.stat-l{font-size:.62rem;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--light-mid);margin-top:.4rem;}
+.hero-right{padding:7rem 4rem 5rem;display:flex;flex-direction:column;justify-content:space-between;opacity:0;animation:fadeIn 1.1s var(--ease) .5s forwards;}
+.hero-right-label{font-size:.6rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--light-dim);margin-bottom:1.8rem;}
 .svc-list{list-style:none;}
-.svc-list li{
-  font-family:var(--f-ui);font-weight:700;
-  font-size:clamp(1.6rem,2.4vw,2.6rem);
-  letter-spacing:-.02em;
-  color:var(--light-ghost);
-  border-bottom:1px solid var(--line-dark);
-  padding:1rem 0;
-  display:flex;justify-content:space-between;align-items:center;
-  transition:color .3s,padding-left .3s var(--spring);
-  cursor:default;
-}
+.svc-list li{font-family:var(--f-ui);font-weight:700;font-size:clamp(1.6rem,2.4vw,2.6rem);letter-spacing:-.02em;color:var(--light-ghost);border-bottom:1px solid var(--line-dark);padding:1rem 0;display:flex;justify-content:space-between;align-items:center;transition:color .3s,padding-left .3s var(--spring);cursor:default;}
 .svc-list li:hover{color:var(--light);padding-left:.6rem;}
-.svc-num-s{
-  font-size:.58rem;font-weight:500;letter-spacing:.1em;
-  color:var(--rust);opacity:0;transition:opacity .25s;
-}
+.svc-num-s{font-size:.58rem;font-weight:500;letter-spacing:.1em;color:var(--rust);opacity:0;transition:opacity .25s;}
 .svc-list li:hover .svc-num-s{opacity:1;}
-.hero-right-foot{
-  font-size:.88rem;font-weight:300;color:var(--light-mid);
-  line-height:1.85;max-width:340px;
-  font-family:var(--f-display);font-style:italic;
-}
-
-/* bottom strip */
-.hero-foot{
-  background:var(--carbon);
-  padding:1.4rem 4rem;
-  display:flex;align-items:center;gap:3.5rem;
-  border-top:1px solid var(--line-dark);
-  position:relative;z-index:2;
-  opacity:0;animation:fadeIn 1s ease 1s forwards;
-}
-.hero-foot-label{
-  font-size:.6rem;font-weight:600;letter-spacing:.2em;
-  text-transform:uppercase;color:var(--light-dim);white-space:nowrap;
-}
+.hero-right-foot{font-size:.88rem;font-weight:300;color:var(--light-mid);line-height:1.85;max-width:340px;font-family:var(--f-display);font-style:italic;}
+.hero-foot{background:var(--carbon);padding:1.4rem 4rem;display:flex;align-items:center;gap:3.5rem;border-top:1px solid var(--line-dark);position:relative;z-index:2;opacity:0;animation:fadeIn 1s ease 1s forwards;}
+.hero-foot-label{font-size:.6rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--light-dim);white-space:nowrap;}
 .hero-foot-items{display:flex;gap:2.5rem;flex-wrap:wrap;}
-.hero-foot-item{
-  font-size:.8rem;font-weight:300;
-  font-family:var(--f-display);font-style:italic;
-  color:var(--light-mid);
-}
+.hero-foot-item{font-size:.8rem;font-weight:300;font-family:var(--f-display);font-style:italic;color:var(--light-mid);}
 
-/* ==============================================
-   TICKER
-============================================== */
-.ticker{
-  background:var(--carbon-mid);
-  border-top:1px solid var(--line-dark);
-  border-bottom:1px solid var(--line-dark);
-  height:42px;overflow:hidden;
-  display:flex;align-items:center;
-}
-.ticker-track{
-  display:flex;gap:0;
-  animation:ticker-anim 26s linear infinite;
-  width:max-content;white-space:nowrap;
-}
-.t-item{
-  display:inline-flex;align-items:center;gap:1.4rem;
-  padding:0 2rem;
-  font-size:.62rem;font-weight:500;letter-spacing:.16em;
-  text-transform:uppercase;color:var(--light-mid);
-}
+/* TICKER */
+.ticker{background:var(--carbon-mid);border-top:1px solid var(--line-dark);border-bottom:1px solid var(--line-dark);height:42px;overflow:hidden;display:flex;align-items:center;}
+.ticker-track{display:flex;gap:0;animation:ticker-anim 26s linear infinite;width:max-content;white-space:nowrap;}
+.t-item{display:inline-flex;align-items:center;gap:1.4rem;padding:0 2rem;font-size:.62rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--light-mid);}
 .t-dot{width:3px;height:3px;border-radius:50%;background:var(--rust);flex-shrink:0;}
 @keyframes ticker-anim{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
 
-/* ==============================================
-   PHILOSOPHY — FULL SCREEN SCENE (LIGHT)
-============================================== */
-.philosophy{
-  background:var(--off-white);color:var(--ink);
-  padding:10rem 4rem;
-  min-height:100vh;
-  display:flex;align-items:center;
-}
-.philosophy-inner{
-  display:grid;grid-template-columns:1fr 2fr;gap:9rem;
-  align-items:start;width:100%;
-}
-.phil-sticky{position:sticky;top:6rem;}
-.phil-eyebrow .eyebrow-line{background:rgba(15,14,12,.3);}
-.phil-eyebrow .eyebrow{color:var(--ink-mid);}
-.phil-eyebrow{margin-bottom:1.5rem;}
-.phil-aside{
-  font-family:var(--f-display);font-style:italic;
-  font-size:1.1rem;font-weight:300;color:var(--ink-mid);line-height:1.7;
-}
-.phil-main{
-  font-family:var(--f-ui);font-weight:700;
-  font-size:clamp(2.2rem,3.2vw,3.4rem);
-  letter-spacing:-.03em;line-height:1.12;color:var(--ink);
-  margin-bottom:2.8rem;
-}
-.phil-main em{
-  font-family:var(--f-display);font-style:italic;font-weight:300;
-  color:var(--rust);
-}
-.phil-body{
-  font-size:1.05rem;font-weight:300;color:var(--ink-mid);
-  line-height:1.95;max-width:560px;margin-bottom:4rem;
-}
-.phil-body strong{color:var(--ink-soft);font-weight:500;}
-.pillars{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:1px;background:var(--line-light);
-  border:1px solid var(--line-light);
-}
-.pillar{
-  background:var(--off-white);padding:2rem 2rem 2.2rem;
-  transition:background .3s;
-}
-.pillar:hover{background:var(--paper);}
-.pillar-icon{font-size:.85rem;color:var(--rust);margin-bottom:.9rem;opacity:.65;}
-.pillar-name{
-  font-size:.68rem;font-weight:600;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--ink);margin-bottom:.6rem;
-}
-.pillar-desc{
-  font-family:var(--f-display);font-style:italic;
-  font-size:.9rem;font-weight:300;color:var(--ink-mid);line-height:1.7;
-}
-
-/* ==============================================
-   PROCESS — DARK SCENE
-============================================== */
-.process{
-  background:var(--carbon);color:var(--light);
-  padding:10rem 4rem;min-height:100vh;
-  display:flex;align-items:center;
-}
+/* PROCESS — now includes pillars */
+.process{background:var(--carbon);color:var(--light);padding:10rem 4rem;min-height:100vh;display:flex;align-items:center;}
 .process-inner{width:100%;}
-.process-top{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:6rem;align-items:end;margin-bottom:6rem;
-}
-.process-h{
-  font-family:var(--f-ui);font-weight:800;
-  font-size:clamp(2.2rem,3.5vw,3.8rem);
-  letter-spacing:-.03em;line-height:1.1;
-  color:var(--light);margin-top:1.2rem;
-}
-.process-h em{
-  font-family:var(--f-display);font-style:italic;
-  font-weight:300;color:var(--rust);
-}
-.process-intro{
-  font-size:1rem;font-weight:300;color:var(--light-soft);
-  line-height:1.85;
-  font-family:var(--f-display);font-style:italic;
-}
-.steps{
-  display:grid;grid-template-columns:repeat(4,1fr);
-  gap:1px;background:var(--line-dark);
-  border:1px solid var(--line-dark);
-}
-.step{
-  background:var(--carbon);padding:2.5rem 2rem;
-  transition:background .3s;
-}
+.process-top{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:end;margin-bottom:6rem;}
+.process-h{font-family:var(--f-ui);font-weight:800;font-size:clamp(2.2rem,3.5vw,3.8rem);letter-spacing:-.03em;line-height:1.1;color:var(--light);margin-top:1.2rem;}
+.process-h em{font-family:var(--f-display);font-style:italic;font-weight:300;color:var(--rust);}
+.process-intro{font-size:1rem;font-weight:300;color:var(--light-soft);line-height:1.85;font-family:var(--f-display);font-style:italic;}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line-dark);border:1px solid var(--line-dark);}
+.step{background:var(--carbon);padding:2.5rem 2rem;transition:background .3s;}
 .step:hover{background:var(--carbon-mid);}
-.step-n{
-  font-family:var(--f-display);font-style:italic;
-  font-size:3.5rem;font-weight:300;
-  color:var(--light-ghost);line-height:1;margin-bottom:1.5rem;
-}
-.step-title{
-  font-size:.78rem;font-weight:600;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--light);margin-bottom:.8rem;
-}
-.step-desc{
-  font-size:.9rem;font-weight:300;color:var(--light-soft);
-  line-height:1.75;
-  font-family:var(--f-display);font-style:italic;
-}
+.step-n{font-family:var(--f-display);font-style:italic;font-size:3.5rem;font-weight:300;color:var(--light-ghost);line-height:1;margin-bottom:1.5rem;}
+.step-title{font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--light);margin-bottom:.8rem;}
+.step-desc{font-size:.9rem;font-weight:300;color:var(--light-soft);line-height:1.75;font-family:var(--f-display);font-style:italic;}
 
-/* ==============================================
-   PORTFOLIO — LIGHT SCENE
-============================================== */
-.portfolio{
-  background:var(--paper);color:var(--ink);
-  padding:9rem 4rem;
-}
-.port-top{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:5rem;align-items:end;margin-bottom:4.5rem;
-}
-.port-h{
-  font-family:var(--f-ui);font-weight:800;
-  font-size:clamp(2.2rem,3.5vw,3.8rem);
-  letter-spacing:-.03em;line-height:1.1;
-  color:var(--ink);margin-top:1.2rem;
-}
-.port-h em{
-  font-family:var(--f-display);font-style:italic;
-  font-weight:300;color:var(--rust);
-}
-.port-intro{
-  font-size:1rem;font-weight:300;color:var(--ink-mid);line-height:1.85;
-  font-family:var(--f-display);font-style:italic;
-}
+/* Pillars integrated into process section */
+.pillars-label{font-size:.62rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--light-dim);margin-top:4rem;margin-bottom:1.5rem;}
+.pillars-dark{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line-dark);border:1px solid var(--line-dark);}
+.pillar-dark{background:var(--carbon);padding:2rem 2rem 2.2rem;transition:background .3s;}
+.pillar-dark:hover{background:var(--carbon-mid);}
+.pillar-icon{font-size:.85rem;color:var(--rust);margin-bottom:.9rem;opacity:.65;}
+.pillar-name{font-size:.68rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--light);margin-bottom:.6rem;}
+.pillar-desc{font-family:var(--f-display);font-style:italic;font-size:.9rem;font-weight:300;color:var(--light-soft);line-height:1.7;}
 
-/* controls */
-.port-controls{
-  display:flex;justify-content:space-between;align-items:center;
-  padding-bottom:1.5rem;border-bottom:1px solid var(--line-light);
-  margin-bottom:1.2rem;flex-wrap:wrap;gap:1rem;
-}
+/* PORTFOLIO */
+.portfolio{background:var(--paper);color:var(--ink);padding:9rem 4rem;}
+.port-top{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:end;margin-bottom:4.5rem;}
+.port-h{font-family:var(--f-ui);font-weight:800;font-size:clamp(2.2rem,3.5vw,3.8rem);letter-spacing:-.03em;line-height:1.1;color:var(--ink);margin-top:1.2rem;}
+.port-h em{font-family:var(--f-display);font-style:italic;font-weight:300;color:var(--rust);}
+.port-intro{font-size:1rem;font-weight:300;color:var(--ink-mid);line-height:1.85;font-family:var(--f-display);font-style:italic;}
+.port-controls{display:flex;justify-content:space-between;align-items:center;padding-bottom:1.5rem;border-bottom:1px solid var(--line-light);margin-bottom:1.2rem;flex-wrap:wrap;gap:1rem;}
 .filter-pills{display:flex;gap:.35rem;flex-wrap:wrap;}
-.f-p{
-  font-size:.63rem;font-weight:500;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--ink-mid);
-  background:transparent;border:1px solid var(--line-light);
-  padding:.42rem 1rem;border-radius:100px;
-  cursor:none;transition:all .2s;
-}
+.f-p{font-size:.63rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-mid);background:transparent;border:1px solid var(--line-light);padding:.42rem 1rem;border-radius:100px;cursor:none;transition:all .2s;}
 .f-p:hover{border-color:var(--ink-mid);color:var(--ink);}
 .f-p.on{background:var(--ink);color:var(--off-white);border-color:var(--ink);}
 .search-wrap{position:relative;}
-.search-wrap input{
-  font-family:var(--f-ui);font-size:.75rem;font-weight:400;
-  background:transparent;border:1px solid var(--line-light);
-  border-radius:100px;padding:.48rem 1rem .48rem 2.4rem;
-  color:var(--ink);outline:none;width:200px;
-  transition:border-color .2s;
-}
+.search-wrap input{font-family:var(--f-ui);font-size:.75rem;font-weight:400;background:transparent;border:1px solid var(--line-light);border-radius:100px;padding:.48rem 1rem .48rem 2.4rem;color:var(--ink);outline:none;width:200px;transition:border-color .2s;}
 .search-wrap input::placeholder{color:var(--ink-dim);}
 .search-wrap input:focus{border-color:var(--rust);}
-.s-ico{
-  position:absolute;left:.9rem;top:50%;transform:translateY(-50%);
-  color:var(--ink-dim);font-size:.82rem;pointer-events:none;
-}
-.port-meta{
-  font-size:.68rem;letter-spacing:.06em;
-  color:var(--ink-dim);margin-bottom:.8rem;
-}
+.s-ico{position:absolute;left:.9rem;top:50%;transform:translateY(-50%);color:var(--ink-dim);font-size:.82rem;pointer-events:none;}
+.port-meta{font-size:.68rem;letter-spacing:.06em;color:var(--ink-dim);margin-bottom:.8rem;}
 .port-meta strong{color:var(--rust);}
-
-/* work list */
 .work-list{border-top:1px solid var(--line-light);}
 .work-row{border-bottom:1px solid var(--line-light);}
-.work-row-head{
-  display:grid;
-  grid-template-columns:52px 1fr auto 36px;
-  align-items:center;gap:2rem;
-  padding:1.5rem 0;cursor:none;
-  position:relative;
-}
-.work-row-head::before{
-  content:'';position:absolute;
-  left:-4rem;right:-4rem;top:0;bottom:0;
-  background:var(--off-white);opacity:0;
-  transition:opacity .2s;z-index:-1;
-}
+.work-row-head{display:grid;grid-template-columns:52px 1fr auto 36px;align-items:center;gap:2rem;padding:1.5rem 0;cursor:none;position:relative;}
+.work-row-head::before{content:'';position:absolute;left:-4rem;right:-4rem;top:0;bottom:0;background:var(--off-white);opacity:0;transition:opacity .2s;z-index:-1;}
 .work-row:hover .work-row-head::before{opacity:1;}
-.row-num{
-  font-family:var(--f-display);font-style:italic;
-  font-size:1.1rem;color:var(--ink-ghost);
-  transition:color .25s;
-}
+.row-num{font-family:var(--f-display);font-style:italic;font-size:1.1rem;color:var(--ink-ghost);transition:color .25s;}
 .work-row:hover .row-num{color:var(--ink-dim);}
-.row-company{
-  font-family:var(--f-ui);font-weight:700;
-  font-size:1.35rem;letter-spacing:-.02em;
-  color:var(--ink);transition:color .25s;line-height:1.15;
-}
+.row-company{font-family:var(--f-ui);font-weight:700;font-size:1.35rem;letter-spacing:-.02em;color:var(--ink);transition:color .25s;line-height:1.15;}
 .work-row:hover .row-company{color:var(--rust);}
-.row-industry{
-  font-size:.63rem;letter-spacing:.05em;
-  color:var(--ink-dim);margin-top:.2rem;
-}
-.row-badge{
-  font-size:.58rem;font-weight:600;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--rust);
-  border:1px solid var(--rust-mid);background:var(--rust-soft);
-  padding:.28rem .72rem;white-space:nowrap;
-}
-.row-toggle{
-  width:30px;height:30px;border:1px solid var(--line-light);
-  border-radius:50%;display:flex;align-items:center;
-  justify-content:center;color:var(--ink-dim);font-size:.85rem;
-  transition:all .3s var(--spring);flex-shrink:0;
-}
-.work-row.open .row-toggle{
-  background:var(--rust);border-color:var(--rust);
-  color:var(--white);transform:rotate(45deg);
-}
-
-/* expand panel */
+.row-industry{font-size:.63rem;letter-spacing:.05em;color:var(--ink-dim);margin-top:.2rem;}
+.row-badge{font-size:.58rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--rust);border:1px solid var(--rust-mid);background:var(--rust-soft);padding:.28rem .72rem;white-space:nowrap;}
+.row-toggle{width:30px;height:30px;border:1px solid var(--line-light);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--ink-dim);font-size:.85rem;transition:all .3s var(--spring);flex-shrink:0;}
+.work-row.open .row-toggle{background:var(--rust);border-color:var(--rust);color:var(--white);transform:rotate(45deg);}
 .work-expand{max-height:0;overflow:hidden;transition:max-height .55s var(--ease);}
-.work-expand-inner{
-  padding:0 0 2.5rem 4.5rem;
-  display:grid;grid-template-columns:1fr auto;
-  gap:2.5rem;align-items:start;
-}
-.row-excerpt{
-  font-family:var(--f-display);font-style:italic;
-  font-size:.98rem;font-weight:300;color:var(--ink-mid);
-  line-height:1.9;max-width:540px;
-  display:-webkit-box;-webkit-line-clamp:5;
-  -webkit-box-orient:vertical;overflow:hidden;
-}
-.btn-open{
-  display:inline-flex;align-items:center;gap:.6rem;
-  font-size:.65rem;font-weight:600;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--ink);
-  background:none;border:1px solid var(--line-light);
-  padding:.72rem 1.2rem;cursor:none;flex-shrink:0;
-  transition:all .25s;
-}
+.work-expand-inner{padding:0 0 2.5rem 4.5rem;display:grid;grid-template-columns:1fr auto;gap:2.5rem;align-items:start;}
+.row-excerpt{font-family:var(--f-display);font-style:italic;font-size:.98rem;font-weight:300;color:var(--ink-mid);line-height:1.9;max-width:540px;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden;}
+.btn-open{display:inline-flex;align-items:center;gap:.6rem;font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);background:none;border:1px solid var(--line-light);padding:.72rem 1.2rem;cursor:none;flex-shrink:0;transition:all .25s;}
 .btn-open:hover{background:var(--ink);color:var(--off-white);border-color:var(--ink);}
-.no-results{
-  padding:4rem 0;text-align:center;
-  font-family:var(--f-display);font-style:italic;
-  font-size:1.4rem;color:var(--ink-dim);
-}
+.no-results{padding:4rem 0;text-align:center;font-family:var(--f-display);font-style:italic;font-size:1.4rem;color:var(--ink-dim);}
 
-/* ==============================================
-   SERVICES — DARK SCENE
-============================================== */
-.services{
-  background:var(--obsidian);color:var(--light);
-  padding:10rem 4rem;min-height:100vh;
-  display:flex;align-items:center;
-}
+/* SERVICES — 2-3 grid */
+.services{background:var(--obsidian);color:var(--light);padding:10rem 4rem;display:flex;align-items:center;}
 .svc-inner{width:100%;}
-.svc-top{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:6rem;align-items:end;margin-bottom:5.5rem;
-}
-.svc-h{
-  font-family:var(--f-ui);font-weight:800;
-  font-size:clamp(2.2rem,3.5vw,3.8rem);
-  letter-spacing:-.03em;line-height:1.1;
-  color:var(--light);margin-top:1.2rem;
-}
-.svc-h em{
-  font-family:var(--f-display);font-style:italic;
-  font-weight:300;color:var(--rust);
-}
-.svc-intro{
-  font-size:1rem;font-weight:300;color:var(--light-soft);line-height:1.85;
-  font-family:var(--f-display);font-style:italic;
-}
-.svc-rows{
-  border:1px solid var(--line-dark);
-  display:flex;flex-direction:column;gap:0;
-}
-.svc-row{
-  border-bottom:1px solid var(--line-dark);
-  padding:2.6rem 2.8rem;
-  display:grid;grid-template-columns:72px 1fr auto;
-  gap:2rem;align-items:start;
-  transition:background .3s;cursor:default;
-}
-.svc-row:last-child{border-bottom:none;}
-.svc-row:hover{background:var(--carbon);}
-.svc-i{
-  font-family:var(--f-display);font-style:italic;
-  font-size:1.7rem;font-weight:300;
-  color:var(--light-ghost);line-height:1;padding-top:.15rem;
-}
-.svc-name{
-  font-size:.92rem;font-weight:600;letter-spacing:-.01em;
-  color:var(--light);margin-bottom:.45rem;
-}
-.svc-sub{
-  font-size:.85rem;font-weight:300;color:var(--light-mid);
-  font-family:var(--f-display);font-style:italic;margin-bottom:1rem;
-}
-.svc-chips{display:flex;flex-wrap:wrap;gap:.38rem;}
-.svc-chip{
-  font-size:.58rem;font-weight:500;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--light-mid);
-  border:1px solid var(--line-dark);padding:.22rem .65rem;
-}
-.svc-glyph{
-  font-size:1.4rem;color:var(--rust);opacity:.4;
-  padding-top:.15rem;transition:opacity .25s;
-}
-.svc-row:hover .svc-glyph{opacity:.8;}
+.svc-top{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:end;margin-bottom:5.5rem;}
+.svc-h{font-family:var(--f-ui);font-weight:800;font-size:clamp(2.2rem,3.5vw,3.8rem);letter-spacing:-.03em;line-height:1.1;color:var(--light);margin-top:1.2rem;}
+.svc-h em{font-family:var(--f-display);font-style:italic;font-weight:300;color:var(--rust);}
+.svc-intro{font-size:1rem;font-weight:300;color:var(--light-soft);line-height:1.85;font-family:var(--f-display);font-style:italic;}
+.svc-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line-dark);border:1px solid var(--line-dark);}
+.svc-card{background:var(--obsidian);padding:2.4rem 2.6rem;transition:background .3s;cursor:default;display:flex;gap:1.6rem;align-items:flex-start;}
+.svc-card:hover{background:var(--carbon);}
+.svc-card-last{grid-column:1 / -1;display:flex;justify-content:center;}
+.svc-card-last .svc-card-inner{max-width:50%;}
+.svc-i{font-family:var(--f-display);font-style:italic;font-size:1.5rem;font-weight:300;color:var(--light-ghost);line-height:1;flex-shrink:0;padding-top:.1rem;}
+.svc-card-inner{flex:1;}
+.svc-name{font-size:.92rem;font-weight:600;letter-spacing:-.01em;color:var(--light);margin-bottom:.4rem;}
+.svc-sub{font-size:.82rem;font-weight:300;color:var(--light-mid);font-family:var(--f-display);font-style:italic;}
+.svc-glyph{font-size:1.2rem;color:var(--rust);opacity:.4;transition:opacity .25s;flex-shrink:0;padding-top:.1rem;}
+.svc-card:hover .svc-glyph{opacity:.8;}
 
-/* ==============================================
-   ABOUT — LIGHT SCENE
-============================================== */
-.about{
-  background:var(--off-white);color:var(--ink);
-  padding:10rem 4rem;min-height:100vh;
-  display:grid;grid-template-columns:1fr 1.1fr;
-  gap:9rem;align-items:start;
-}
+/* ABOUT */
+.about{background:var(--off-white);color:var(--ink);padding:10rem 4rem;display:grid;grid-template-columns:1fr 1.1fr;gap:9rem;align-items:start;}
 .about-left{position:sticky;top:6rem;}
-.about-h{
-  font-family:var(--f-ui);font-weight:800;
-  font-size:clamp(2.2rem,3.5vw,3.8rem);
-  letter-spacing:-.03em;line-height:1.1;
-  color:var(--ink);margin-top:1.2rem;margin-bottom:2.5rem;
-}
-.about-h em{
-  font-family:var(--f-display);font-style:italic;
-  font-weight:300;color:var(--rust);
-}
+.about-h{font-family:var(--f-ui);font-weight:800;font-size:clamp(2.2rem,3.5vw,3.8rem);letter-spacing:-.03em;line-height:1.1;color:var(--ink);margin-top:1.2rem;margin-bottom:2.5rem;}
+.about-h em{font-family:var(--f-display);font-style:italic;font-weight:300;color:var(--rust);}
 .about-rule{width:36px;height:1px;background:var(--rust);opacity:.5;margin-bottom:1.8rem;}
-.about-pull{
-  font-family:var(--f-display);font-style:italic;
-  font-size:1.15rem;font-weight:300;color:var(--ink-soft);line-height:1.6;
-}
-.about-body p{
-  font-size:1.02rem;font-weight:300;color:var(--ink-mid);
-  line-height:1.95;margin-bottom:1.8rem;
-}
+.about-pull{font-family:var(--f-display);font-style:italic;font-size:1.15rem;font-weight:300;color:var(--ink-soft);line-height:1.6;}
+.about-body p{font-size:1.02rem;font-weight:300;color:var(--ink-mid);line-height:1.95;margin-bottom:1.8rem;}
 .about-body strong{color:var(--ink-soft);font-weight:500;}
-.about-cta-block{
-  margin-top:2.5rem;padding:2.5rem;
-  border:1px solid var(--line-light);
-  background:var(--paper);
-  display:flex;flex-direction:column;gap:1.2rem;
-}
-.about-cta-label{
-  font-size:.62rem;font-weight:600;letter-spacing:.18em;
-  text-transform:uppercase;color:var(--ink-mid);
-}
-.about-cta-text{
-  font-family:var(--f-ui);font-size:1.1rem;font-weight:700;
-  letter-spacing:-.02em;color:var(--ink);line-height:1.3;
-}
-.btn-ink{
-  display:inline-flex;align-items:center;gap:.8rem;
-  background:var(--ink);color:var(--off-white);
-  font-size:.7rem;font-weight:600;letter-spacing:.12em;
-  text-transform:uppercase;padding:.9rem 1.8rem;
-  text-decoration:none;border-radius:2px;width:fit-content;
-  transition:background .25s,transform .2s;
-}
+.about-cta-block{margin-top:2.5rem;padding:2.5rem;border:1px solid var(--line-light);background:var(--paper);display:flex;flex-direction:column;gap:1.2rem;}
+.about-cta-label{font-size:.62rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-mid);}
+.about-cta-text{font-family:var(--f-ui);font-size:1.1rem;font-weight:700;letter-spacing:-.02em;color:var(--ink);line-height:1.3;}
+.btn-ink{display:inline-flex;align-items:center;gap:.8rem;background:var(--ink);color:var(--off-white);font-size:.7rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:.9rem 1.8rem;text-decoration:none;border-radius:2px;width:fit-content;transition:background .25s,transform .2s;}
 .btn-ink:hover{background:var(--rust);transform:translateX(3px);}
 .btn-ink .arr{transition:transform .2s;}
 .btn-ink:hover .arr{transform:translateX(4px);}
 
-/* ==============================================
-   TESTIMONIALS — DARK SCENE
-============================================== */
-.testimonials{
-  background:var(--carbon);color:var(--light);
-  padding:9rem 4rem;
-}
-.testi-top{
-  display:flex;justify-content:space-between;
-  align-items:flex-end;margin-bottom:4.5rem;
-}
-.testi-h{
-  font-family:var(--f-ui);font-weight:800;
-  font-size:clamp(2rem,3.2vw,3.2rem);
-  letter-spacing:-.03em;line-height:1.1;
-  color:var(--light);margin-top:1.2rem;
-}
-.testi-h em{
-  font-family:var(--f-display);font-style:italic;
-  font-weight:300;color:var(--rust);
-}
-.testi-note{
-  font-size:.88rem;font-weight:300;color:var(--light-mid);
-  font-family:var(--f-display);font-style:italic;
-  max-width:260px;text-align:right;line-height:1.7;
-}
-.testi-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:1px;background:var(--line-dark);
-  border:1px solid var(--line-dark);
-}
-.testi-card{
-  background:var(--carbon);padding:2.8rem 2.4rem;
-  transition:background .3s;
-}
-.testi-card:hover{background:var(--carbon-mid);}
-.testi-q{
-  font-family:var(--f-display);font-style:italic;
-  font-size:4rem;line-height:.8;color:var(--rust);
-  opacity:.25;margin-bottom:.8rem;
-}
-.testi-body{
-  font-family:var(--f-display);font-style:italic;
-  font-size:1rem;font-weight:300;color:var(--light-soft);
-  line-height:1.85;margin-bottom:2.2rem;
-}
-.testi-sig{
-  display:flex;align-items:center;gap:1rem;
-  padding-top:1.5rem;border-top:1px solid var(--line-dark);
-}
-.testi-av{
-  width:34px;height:34px;border-radius:50%;background:var(--rust);
-  display:flex;align-items:center;justify-content:center;
-  font-size:.65rem;font-weight:600;color:var(--white);flex-shrink:0;
-}
-.testi-name{font-size:.8rem;font-weight:600;color:var(--light);letter-spacing:.03em;}
-.testi-role{
-  font-family:var(--f-display);font-style:italic;
-  font-size:.75rem;font-weight:300;color:var(--light-dim);margin-top:.15rem;
-}
-
-/* ==============================================
-   CONTACT — FULL SCREEN DARK, CINEMATIC
-============================================== */
-.contact{
-  background:var(--obsidian);color:var(--light);
-  min-height:100vh;
-  display:flex;flex-direction:column;
-  justify-content:space-between;
-  padding:0 4rem;
-  position:relative;overflow:hidden;
-}
-
-/* large bg word */
-.contact-bg-word{
-  position:absolute;
-  right:-2rem;bottom:-3rem;
-  font-family:var(--f-ui);font-weight:800;
-  font-size:clamp(120px,20vw,260px);
-  letter-spacing:-.05em;line-height:1;
-  color:var(--light-ghost);
-  user-select:none;pointer-events:none;
-  white-space:nowrap;
-}
-
-.contact-inner{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:8rem;align-items:start;
-  padding:9rem 0 6rem;
-  border-bottom:1px solid var(--line-dark);
-  position:relative;z-index:2;
-}
-.contact-h{
-  font-family:var(--f-ui);font-weight:800;
-  font-size:clamp(2.8rem,5vw,5.5rem);
-  letter-spacing:-.04em;line-height:1.05;
-  color:var(--light);margin-top:1.5rem;
-}
-.contact-h em{
-  font-family:var(--f-display);font-style:italic;
-  font-weight:300;color:var(--rust);
-}
-.contact-right{
-  padding-top:3rem;
-  display:flex;flex-direction:column;gap:2.5rem;
-}
-.contact-sig{
-  font-family:var(--f-display);font-style:italic;
-  font-weight:300;
-  font-size:clamp(4rem,7.5vw,8rem);
-  color:var(--light-ghost);line-height:.9;
-  letter-spacing:-.03em;user-select:none;
-}
-.contact-email-link{
-  display:inline-flex;align-items:center;gap:.9rem;
-  font-family:var(--f-ui);font-weight:700;
-  font-size:clamp(1rem,1.8vw,1.5rem);
-  letter-spacing:-.01em;
-  color:var(--light);text-decoration:none;
-  border-bottom:1px solid var(--light-dim);
-  padding-bottom:.4rem;
-  transition:color .25s,border-color .25s;
-}
+/* CONTACT */
+.contact{background:var(--obsidian);color:var(--light);min-height:100vh;display:flex;flex-direction:column;justify-content:space-between;padding:0 4rem;position:relative;overflow:hidden;}
+.contact-inner{display:grid;grid-template-columns:1fr 1fr;gap:8rem;align-items:start;padding:9rem 0 6rem;border-bottom:1px solid var(--line-dark);position:relative;z-index:2;}
+.contact-h{font-family:var(--f-ui);font-weight:800;font-size:clamp(2.8rem,5vw,5.5rem);letter-spacing:-.04em;line-height:1.05;color:var(--light);margin-top:1.5rem;}
+.contact-h em{font-family:var(--f-display);font-style:italic;font-weight:300;color:var(--rust);}
+.contact-right{padding-top:3rem;display:flex;flex-direction:column;gap:2.5rem;}
+.contact-sig{font-family:var(--f-display);font-style:italic;font-weight:300;font-size:clamp(4rem,7.5vw,8rem);color:var(--light-ghost);line-height:.9;letter-spacing:-.03em;user-select:none;}
+.contact-links{display:flex;flex-direction:column;gap:1rem;}
+.contact-email-link{display:inline-flex;align-items:center;gap:.9rem;font-family:var(--f-ui);font-weight:700;font-size:clamp(1rem,1.8vw,1.5rem);letter-spacing:-.01em;color:var(--light);text-decoration:none;border-bottom:1px solid var(--light-dim);padding-bottom:.4rem;width:fit-content;transition:color .25s,border-color .25s;}
 .contact-email-link:hover{color:var(--rust);border-color:var(--rust);}
-.contact-note{
-  font-size:.9rem;font-weight:300;color:var(--light-mid);line-height:1.85;
-  font-family:var(--f-display);font-style:italic;
-}
-.contact-who-name{
-  font-size:.7rem;font-weight:600;letter-spacing:.16em;
-  text-transform:uppercase;color:var(--light-soft);
-}
-.contact-who-role{
-  font-size:.85rem;font-weight:300;color:var(--light-dim);
-  font-family:var(--f-display);font-style:italic;margin-top:.2rem;
-}
-
-.footer-bar{
-  padding:1.8rem 0;
-  display:flex;justify-content:space-between;align-items:center;
-  position:relative;z-index:2;
-}
-.footer-brand{
-  font-size:.8rem;font-weight:700;letter-spacing:.18em;
-  text-transform:uppercase;color:var(--light-dim);
-}
+.contact-linkedin-link{display:inline-flex;align-items:center;gap:.9rem;font-family:var(--f-ui);font-weight:700;font-size:clamp(1rem,1.8vw,1.5rem);letter-spacing:-.01em;color:var(--light);text-decoration:none;border-bottom:1px solid var(--light-dim);padding-bottom:.4rem;width:fit-content;transition:color .25s,border-color .25s;}
+.contact-linkedin-link:hover{color:var(--rust);border-color:var(--rust);}
+.contact-note{font-size:.9rem;font-weight:300;color:var(--light-mid);line-height:1.85;font-family:var(--f-display);font-style:italic;}
+.contact-who-name{font-size:.7rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--light-soft);}
+.contact-who-role{font-size:.85rem;font-weight:300;color:var(--light-dim);font-family:var(--f-display);font-style:italic;margin-top:.2rem;}
+.footer-bar{padding:1.8rem 0;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2;}
+.footer-brand{font-size:.8rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--light-dim);}
 .footer-brand span{color:var(--rust);}
 .footer-copy{font-size:.65rem;letter-spacing:.06em;color:var(--light-dim);}
+.footer-linkedin{font-size:.65rem;letter-spacing:.06em;color:var(--light-dim);text-decoration:none;transition:color .2s;}
+.footer-linkedin:hover{color:var(--rust);}
 
-/* ==============================================
-   OVERLAY
-============================================== */
-.overlay{
-  display:none;position:fixed;inset:0;z-index:800;
-  background:var(--paper);overflow-y:auto;
-  opacity:0;transition:opacity .3s var(--ease);
-}
+/* OVERLAY */
+.overlay{display:none;position:fixed;inset:0;z-index:800;background:var(--paper);overflow-y:auto;opacity:0;transition:opacity .3s var(--ease);}
 .overlay.open{display:block;}
 .overlay.vis{opacity:1;}
-.ov-bar{
-  position:sticky;top:0;height:60px;
-  background:rgba(249,247,243,.95);
-  backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--line-light);
-  padding:0 4rem;
-  display:flex;align-items:center;justify-content:space-between;z-index:10;
-}
-.ov-back{
-  display:inline-flex;align-items:center;gap:.6rem;
-  font-size:.68rem;font-weight:600;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--ink-mid);
-  background:none;border:1px solid var(--line-light);
-  padding:.5rem 1.2rem;cursor:none;
-  transition:all .25s;
-}
+.ov-bar{position:sticky;top:0;height:60px;background:rgba(249,247,243,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--line-light);padding:0 4rem;display:flex;align-items:center;justify-content:space-between;z-index:10;}
+.ov-back{display:inline-flex;align-items:center;gap:.6rem;font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-mid);background:none;border:1px solid var(--line-light);padding:.5rem 1.2rem;cursor:none;transition:all .25s;}
 .ov-back:hover{background:var(--ink);color:var(--off-white);border-color:var(--ink);}
-.ov-logo{
-  font-size:.78rem;font-weight:700;letter-spacing:.18em;
-  text-transform:uppercase;color:var(--ink-dim);
-}
+.ov-logo{font-size:.78rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-dim);}
 .ov-logo span{color:var(--rust);}
-.ov-body{
-  display:grid;grid-template-columns:200px 1fr;
-  min-height:calc(100vh - 60px);
-}
-.ov-sidebar{
-  background:var(--off-white);
-  border-right:1px solid var(--line-light);
-  padding:2.5rem 0;
-  position:sticky;top:60px;
-  height:calc(100vh - 60px);
-  overflow-y:auto;
-}
-.ov-tab{
-  display:block;width:100%;text-align:left;
-  padding:.88rem 1.5rem;
-  font-size:.63rem;font-weight:600;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--ink-mid);
-  background:none;border:none;
-  border-left:2px solid transparent;
-  cursor:none;transition:all .2s;
-}
+.ov-body{display:grid;grid-template-columns:200px 1fr;min-height:calc(100vh - 60px);}
+.ov-sidebar{background:var(--off-white);border-right:1px solid var(--line-light);padding:2.5rem 0;position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto;}
+.ov-tab{display:block;width:100%;text-align:left;padding:.88rem 1.5rem;font-size:.63rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-mid);background:none;border:none;border-left:2px solid transparent;cursor:none;transition:all .2s;}
 .ov-tab:hover{background:var(--paper);color:var(--ink);border-left-color:var(--bone);}
 .ov-tab.on{color:var(--rust);border-left-color:var(--rust);background:var(--rust-soft);}
-.ov-tab-num{
-  display:block;font-size:.58rem;font-weight:400;
-  letter-spacing:.06em;color:var(--ink-dim);margin-bottom:.2rem;opacity:.7;
-}
+.ov-tab-num{display:block;font-size:.58rem;font-weight:400;letter-spacing:.06em;color:var(--ink-dim);margin-bottom:.2rem;opacity:.7;}
 .ov-content{padding:4rem 5rem 6rem;max-width:840px;color:var(--ink);}
-.ov-eyebrow{
-  font-size:.6rem;font-weight:600;letter-spacing:.22em;
-  text-transform:uppercase;color:var(--rust);margin-bottom:.8rem;
-}
-.ov-title{
-  font-family:var(--f-ui);font-weight:800;
-  font-size:clamp(2rem,4vw,4rem);
-  letter-spacing:-.03em;line-height:1.06;
-  color:var(--ink);margin-bottom:1.2rem;
-}
-.ov-meta{
-  display:flex;gap:3rem;flex-wrap:wrap;
-  padding:1.2rem 0;
-  border-top:1px solid var(--line-light);
-  border-bottom:1px solid var(--line-light);
-  margin-bottom:1.5rem;
-}
-.ov-m-label{
-  font-size:.58rem;font-weight:600;letter-spacing:.18em;
-  text-transform:uppercase;color:var(--ink-dim);margin-bottom:.2rem;
-}
+.ov-eyebrow{font-size:.6rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--rust);margin-bottom:.8rem;}
+.ov-title{font-family:var(--f-ui);font-weight:800;font-size:clamp(2rem,4vw,4rem);letter-spacing:-.03em;line-height:1.06;color:var(--ink);margin-bottom:1.2rem;}
+.ov-meta{display:flex;gap:3rem;flex-wrap:wrap;padding:1.2rem 0;border-top:1px solid var(--line-light);border-bottom:1px solid var(--line-light);margin-bottom:1.5rem;}
+.ov-m-label{font-size:.58rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:.2rem;}
 .ov-m-val{font-size:.9rem;color:var(--ink-soft);}
-.ov-disc{
-  font-size:.72rem;font-style:italic;color:var(--ink-dim);
-  margin-bottom:2.5rem;opacity:.75;
-}
+.ov-disc{font-size:.72rem;font-style:italic;color:var(--ink-dim);margin-bottom:2.5rem;opacity:.75;}
 .ov-panel{display:none;}
 .ov-panel.on{display:block;}
-.panel-lbl{
-  font-size:.6rem;font-weight:600;letter-spacing:.2em;
-  text-transform:uppercase;color:var(--ink-dim);
-  padding-bottom:.8rem;border-bottom:1px solid var(--line-light);
-  margin-bottom:2rem;
-}
-.copy-frame{
-  background:var(--white);border:1px solid var(--line-light);
-  padding:3rem 3.5rem;
-  font-family:var(--f-display);font-style:italic;
-  font-size:.98rem;font-weight:300;line-height:2;
-  color:var(--ink-soft);white-space:pre-wrap;
-}
-.notes-frame{
-  background:var(--carbon);
-  padding:3rem 3.5rem;
-  font-family:var(--f-display);font-style:italic;
-  font-size:.92rem;font-weight:300;line-height:2;
-  color:var(--light-soft);white-space:pre-wrap;
-}
+.panel-lbl{font-size:.6rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-dim);padding-bottom:.8rem;border-bottom:1px solid var(--line-light);margin-bottom:2rem;}
+.copy-frame{background:var(--white);border:1px solid var(--line-light);padding:3rem 3.5rem;font-family:var(--f-display);font-style:italic;font-size:.98rem;font-weight:300;line-height:2;color:var(--ink-soft);white-space:pre-wrap;}
+.notes-frame{background:var(--carbon);padding:3rem 3.5rem;font-family:var(--f-display);font-style:italic;font-size:.92rem;font-weight:300;line-height:2;color:var(--light-soft);white-space:pre-wrap;}
 .ov-body.solo{grid-template-columns:1fr;}
 .ov-body.solo .ov-sidebar{display:none;}
 .ov-body.solo .ov-content{max-width:860px;margin:0 auto;}
 
-/* ==============================================
-   KEYFRAMES
-============================================== */
 @keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:none;}}
 @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 
-/* ==============================================
-   RESPONSIVE
-============================================== */
 @media(max-width:1100px){
   .hero-inner{grid-template-columns:1fr;}
   .hero-right{border-top:1px solid var(--line-dark);}
-  .philosophy-inner{grid-template-columns:1fr;gap:3.5rem;}
-  .phil-sticky{position:static;}
   .process-top{grid-template-columns:1fr;gap:2rem;}
   .steps{grid-template-columns:1fr 1fr;}
+  .pillars-dark{grid-template-columns:1fr 1fr;}
   .port-top{grid-template-columns:1fr;gap:2rem;}
   .svc-top{grid-template-columns:1fr;gap:2rem;}
+  .svc-grid{grid-template-columns:1fr;}
+  .svc-card-last{grid-column:auto;}
+  .svc-card-last .svc-card-inner{max-width:100%;}
   .about{grid-template-columns:1fr;gap:4rem;padding:7rem 4rem;}
   .about-left{position:static;}
-  .testi-grid{grid-template-columns:1fr;}
-  .testi-top{flex-direction:column;align-items:flex-start;gap:1rem;}
-  .testi-note{text-align:left;max-width:100%;}
   .contact-inner{grid-template-columns:1fr;gap:4rem;}
 }
 @media(max-width:768px){
@@ -1018,24 +295,18 @@ nav.stuck{
   .nav-links{display:none;}
   .hero-left,.hero-right{padding:4rem 1.5rem;}
   .hero-foot{padding:1.2rem 1.5rem;gap:1.5rem;flex-wrap:wrap;}
-  .philosophy,.process,.portfolio,.services,.about,.testimonials{
-    padding-left:1.5rem;padding-right:1.5rem;
-  }
+  .process,.portfolio,.services,.about{padding-left:1.5rem;padding-right:1.5rem;}
   .contact{padding:0 1.5rem;}
   .contact-inner{padding-top:6rem;}
-  .pillars{grid-template-columns:1fr;}
   .steps{grid-template-columns:1fr;}
+  .pillars-dark{grid-template-columns:1fr;}
   .work-row-head{grid-template-columns:44px 1fr 32px;gap:1rem;}
   .row-badge{display:none;}
   .work-expand-inner{grid-template-columns:1fr;padding-left:0;}
-  .svc-row{grid-template-columns:60px 1fr;}
-  .svc-glyph{display:none;}
+  .svc-grid{grid-template-columns:1fr;}
+  .svc-card-last{grid-column:auto;}
   .ov-body{grid-template-columns:1fr;}
-  .ov-sidebar{
-    position:static;height:auto;
-    display:flex;flex-wrap:wrap;
-    border-right:none;border-bottom:1px solid var(--line-light);
-  }
+  .ov-sidebar{position:static;height:auto;display:flex;flex-wrap:wrap;border-right:none;border-bottom:1px solid var(--line-light);}
   .ov-tab{border-left:none;border-bottom:2px solid transparent;}
   .ov-tab.on{border-left:none;border-bottom-color:var(--rust);}
   .ov-content{padding:2.5rem 1.5rem 4rem;}
@@ -1046,11 +317,10 @@ nav.stuck{
 </head>
 <body>
 
-<!-- CURSOR -->
 <div id="cur"></div>
 <div id="cur-ring"></div>
 
-<!-- NAV -->
+<!-- NAV — Calendly link -->
 <nav id="nav">
   <a class="nav-brand" href="#">
     <span class="nav-brand-name">Scriptmint</span>
@@ -1062,27 +332,22 @@ nav.stuck{
     <li><a href="#about">Studio</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
-  <a class="nav-cta-btn" href="mailto:scriptmint.co@gmail.com">Book a Call</a>
+  <a class="nav-cta-btn" href="https://calendly.com/scriptmint-co/30min" target="_blank">Book a Call</a>
 </nav>
 
-<!-- ==========================================
-     SCENE 1 — HERO
-========================================== -->
+<!-- HERO -->
 <section class="hero">
   <div class="hero-grid" aria-hidden="true"></div>
   <div class="hero-inner">
-
     <div class="hero-left">
       <div>
         <div class="hero-overline">Conversion Copywriting Studio</div>
         <h1 class="hero-h1">
           I turn what<br>you do into<br><em>why they buy.</em>
         </h1>
-        <p class="hero-sub">
-          More than words. A strategy in every sentence, built to make your audience feel understood before they are ever sold to.
-        </p>
+        <p class="hero-sub">Research-first copy for brands ready to convert.</p>
         <div class="hero-actions">
-          <a class="btn-rust" href="mailto:scriptmint.co@gmail.com">
+          <a class="btn-rust" href="https://calendly.com/scriptmint-co/30min" target="_blank">
             Book a Discovery Call <span class="arr">→</span>
           </a>
           <a class="btn-ghost-light" href="#work">See the work</a>
@@ -1103,10 +368,9 @@ nav.stuck{
         </div>
       </div>
     </div>
-
     <div class="hero-right">
       <div>
-        <div class="hero-right-label">What we write</div>
+        <div class="hero-right-label">What I write</div>
         <ul class="svc-list">
           <li>UGC Video Scripts <span class="svc-num-s">01</span></li>
           <li>Paid Ad Copy <span class="svc-num-s">02</span></li>
@@ -1119,7 +383,6 @@ nav.stuck{
         Every project begins with deep audience research, pulling real language from Reddit threads, YouTube comments, and customer reviews. Not the way a copywriter imagines they think. The way they actually do.
       </p>
     </div>
-
   </div>
   <div class="hero-foot">
     <div class="hero-foot-label">Works across</div>
@@ -1161,58 +424,7 @@ nav.stuck{
   </div>
 </div>
 
-<!-- ==========================================
-     SCENE 2 — PHILOSOPHY (LIGHT)
-========================================== -->
-<section class="philosophy">
-  <div class="philosophy-inner">
-    <div class="phil-sticky">
-      <div class="eyebrow scene" style="color:var(--ink-mid);">
-        <span class="eyebrow-line" style="background:rgba(15,14,12,.25);"></span>
-        The Philosophy
-      </div>
-      <p class="phil-aside scene scene-delay-1">
-        Strategy comes before the sentence. Always.
-      </p>
-    </div>
-    <div>
-      <h2 class="phil-main scene">
-        Your brand has a story, a voice, and an audience that is already <em>halfway convinced.</em> The copy just has to close the gap.
-      </h2>
-      <p class="phil-body scene scene-delay-1">
-        At SCRIPTMINT, everything starts with what your audience is already thinking, already saying, already feeling. Real language from Reddit threads, YouTube comments, and customer reviews. Not imagined. Not guessed. <strong>Excavated.</strong>
-        <br><br>
-        We have worked across 15 industries, testing and refining what makes people click, read, and buy. So when we write for you, it is not guesswork. It is strategy with a body of evidence behind it.
-      </p>
-      <div class="pillars scene scene-delay-2">
-        <div class="pillar">
-          <div class="pillar-icon">✦</div>
-          <div class="pillar-name">Research-led</div>
-          <div class="pillar-desc">Every piece begins with your audience's real language, pain points, and what actually moves them.</div>
-        </div>
-        <div class="pillar">
-          <div class="pillar-icon">◈</div>
-          <div class="pillar-name">Conversion-first</div>
-          <div class="pillar-desc">Beautiful writing that does not convert is decoration. We write for the action at the end.</div>
-        </div>
-        <div class="pillar">
-          <div class="pillar-icon">◎</div>
-          <div class="pillar-name">Voice-matched</div>
-          <div class="pillar-desc">Your brand sounds like you, not like everyone else's polished, generic output.</div>
-        </div>
-        <div class="pillar">
-          <div class="pillar-icon">⟡</div>
-          <div class="pillar-name">Multi-format</div>
-          <div class="pillar-desc">Emails, ads, pages, scripts. One studio. Every channel.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ==========================================
-     SCENE 3 — PROCESS (DARK)
-========================================== -->
+<!-- PROCESS — with pillars merged in -->
 <section class="process">
   <div class="process-inner">
     <div class="process-top">
@@ -1233,7 +445,7 @@ nav.stuck{
       <div class="step">
         <div class="step-n">01</div>
         <div class="step-title">Audience Research</div>
-        <div class="step-desc">Pulling real language from where your audience already talks. Reddit, YouTube, reviews. Their words, not ours.</div>
+        <div class="step-desc">Pulling real language from where your audience already talks. Reddit, YouTube, reviews. Their words, not mine.</div>
       </div>
       <div class="step">
         <div class="step-n">02</div>
@@ -1251,12 +463,33 @@ nav.stuck{
         <div class="step-desc">Iteration until the copy sounds like you at your absolute best. The voice that closes the gap.</div>
       </div>
     </div>
+    <div class="pillars-label scene">What this means for your copy</div>
+    <div class="pillars-dark scene scene-delay-1">
+      <div class="pillar-dark">
+        <div class="pillar-icon">✦</div>
+        <div class="pillar-name">Research-led</div>
+        <div class="pillar-desc">Every piece begins with your audience's real language, pain points, and what actually moves them.</div>
+      </div>
+      <div class="pillar-dark">
+        <div class="pillar-icon">◈</div>
+        <div class="pillar-name">Conversion-first</div>
+        <div class="pillar-desc">Beautiful writing that does not convert is decoration. I write for the action at the end.</div>
+      </div>
+      <div class="pillar-dark">
+        <div class="pillar-icon">◎</div>
+        <div class="pillar-name">Voice-matched</div>
+        <div class="pillar-desc">Your brand sounds like you, not like everyone else's polished, generic output.</div>
+      </div>
+      <div class="pillar-dark">
+        <div class="pillar-icon">⟡</div>
+        <div class="pillar-name">Multi-format</div>
+        <div class="pillar-desc">Emails, ads, pages, scripts. One studio. Every channel.</div>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- ==========================================
-     SCENE 4 — PORTFOLIO (LIGHT)
-========================================== -->
+<!-- PORTFOLIO — defaults to Email tab -->
 <section class="portfolio" id="work">
   <div class="port-top">
     <div>
@@ -1270,11 +503,10 @@ nav.stuck{
       Twenty pieces spanning UGC scripts, cold email sequences, landing pages, ad copy, and long-form strategy. Every piece shows its reasoning, not just its result.
     </p>
   </div>
-
   <div class="port-controls scene">
     <div class="filter-pills" id="filters">
-      <button class="f-p on" data-f="all">All</button>
-      <button class="f-p" data-f="Email">Email</button>
+      <button class="f-p" data-f="all">All</button>
+      <button class="f-p on" data-f="Email">Email</button>
       <button class="f-p" data-f="Landing">Landing Pages</button>
       <button class="f-p" data-f="Ad">Ad Copy</button>
       <button class="f-p" data-f="Video">Video Scripts</button>
@@ -1285,21 +517,18 @@ nav.stuck{
       <input id="srch" type="text" placeholder="Brand, industry…"/>
     </div>
   </div>
-
   <div class="port-meta"><strong id="rCount">0</strong> pieces</div>
   <div class="work-list" id="workList"></div>
 </section>
 
-<!-- ==========================================
-     SCENE 5 — SERVICES (DARK)
-========================================== -->
+<!-- SERVICES — 2-3 grid -->
 <section class="services" id="services">
   <div class="svc-inner">
     <div class="svc-top">
       <div>
         <div class="eyebrow scene">
           <span class="eyebrow-line"></span>
-          What We Do
+          What I Do
         </div>
         <h2 class="svc-h scene scene-delay-1">Five services.<br>One <em>through line.</em></h2>
       </div>
@@ -1307,84 +536,54 @@ nav.stuck{
         Every service starts the same way: with the real words your audience already uses to describe the problem you solve. That is the edge. The copy flows from there.
       </p>
     </div>
-    <div class="svc-rows scene">
-      <div class="svc-row">
+    <div class="svc-grid scene">
+      <div class="svc-card">
         <div class="svc-i">01</div>
-        <div>
+        <div class="svc-card-inner">
           <div class="svc-name">UGC Video Scripts</div>
           <div class="svc-sub">Reels, TikTok, YouTube Shorts</div>
-          <div class="svc-chips">
-            <span class="svc-chip">Instagram Reels</span>
-            <span class="svc-chip">TikTok Scripts</span>
-            <span class="svc-chip">YouTube Shorts</span>
-            <span class="svc-chip">UGC Ad Scripts</span>
-          </div>
         </div>
         <div class="svc-glyph">▷</div>
       </div>
-      <div class="svc-row">
+      <div class="svc-card">
         <div class="svc-i">02</div>
-        <div>
+        <div class="svc-card-inner">
           <div class="svc-name">Paid Ad Copy</div>
           <div class="svc-sub">Meta, Google, X</div>
-          <div class="svc-chips">
-            <span class="svc-chip">Facebook and Instagram</span>
-            <span class="svc-chip">Google Search</span>
-            <span class="svc-chip">X Ads</span>
-            <span class="svc-chip">Creative Briefs</span>
-          </div>
         </div>
         <div class="svc-glyph">⟡</div>
       </div>
-      <div class="svc-row">
+      <div class="svc-card">
         <div class="svc-i">03</div>
-        <div>
+        <div class="svc-card-inner">
           <div class="svc-name">Email Marketing and Sequences</div>
           <div class="svc-sub">Cold outreach through full nurture flows</div>
-          <div class="svc-chips">
-            <span class="svc-chip">Cold Email</span>
-            <span class="svc-chip">Welcome Flows</span>
-            <span class="svc-chip">Abandoned Cart</span>
-            <span class="svc-chip">Promotional Broadcasts</span>
-          </div>
         </div>
         <div class="svc-glyph">✉</div>
       </div>
-      <div class="svc-row">
+      <div class="svc-card">
         <div class="svc-i">04</div>
-        <div>
-          <div class="svc-name">Conversion Landing Pages and Sales Copy</div>
+        <div class="svc-card-inner">
+          <div class="svc-name">Conversion Landing Pages</div>
           <div class="svc-sub">Built around the psychology of your specific buyer</div>
-          <div class="svc-chips">
-            <span class="svc-chip">Long-form Sales Letters</span>
-            <span class="svc-chip">SaaS Landing Pages</span>
-            <span class="svc-chip">Opt-in Pages</span>
-            <span class="svc-chip">VSL Scripts</span>
-          </div>
         </div>
         <div class="svc-glyph">◎</div>
       </div>
-      <div class="svc-row">
-        <div class="svc-i">05</div>
-        <div>
-          <div class="svc-name">Research-Driven Campaign Strategy</div>
-          <div class="svc-sub">Before a word is written, the map is drawn</div>
-          <div class="svc-chips">
-            <span class="svc-chip">Voice-of-Customer Research</span>
-            <span class="svc-chip">Messaging Framework</span>
-            <span class="svc-chip">Campaign Angle Development</span>
-            <span class="svc-chip">Copy Review</span>
+      <div class="svc-card-last">
+        <div class="svc-card" style="width:100%;max-width:560px;">
+          <div class="svc-i">05</div>
+          <div class="svc-card-inner">
+            <div class="svc-name">Research-Driven Campaign Strategy</div>
+            <div class="svc-sub">Before a word is written, the map is drawn</div>
           </div>
+          <div class="svc-glyph">✦</div>
         </div>
-        <div class="svc-glyph">✦</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ==========================================
-     SCENE 6 — ABOUT (LIGHT)
-========================================== -->
+<!-- ABOUT — condensed, singular -->
 <section class="about" id="about">
   <div class="about-left scene">
     <div class="eyebrow" style="color:var(--ink-mid);">
@@ -1397,10 +596,7 @@ nav.stuck{
   </div>
   <div>
     <div class="about-body scene scene-delay-1">
-      <p>At SCRIPTMINT, everything starts with you. Your brand has a story, a voice, and an audience waiting to connect. The job is to bridge that gap with words that actually work.</p>
-      <p>Whether it is emails that lift your conversions, ads that stop the scroll, or landing pages that build real trust, the copy is always built around what your business needs most. <strong>Results.</strong></p>
-      <p>We have worked across 15 industries, testing and refining what makes people click, read, and buy. So when we write for you, it is not guesswork. It is strategy with impact.</p>
-      <p>Every project begins with deep audience research, pulling real language from Reddit threads, YouTube comments, and customer reviews. <strong>That is the edge.</strong></p>
+      <p>ScriptMint is a one-person conversion copywriting studio built on a single idea: copy works best when it starts with the customer, not the brand. Every project begins with real research — Reddit threads, YouTube comments, review sections — before a single word is written. I've worked across 15 industries writing emails, ads, scripts, and landing pages for SaaS founders, e-commerce brands, and course creators. If you need copy that earns its place on the page, let's talk.</p>
     </div>
     <div class="about-cta-block scene scene-delay-2">
       <div class="about-cta-label">Ready to start a project?</div>
@@ -1412,62 +608,8 @@ nav.stuck{
   </div>
 </section>
 
-<!-- ==========================================
-     SCENE 7 — TESTIMONIALS (DARK)
-========================================== -->
-<section class="testimonials">
-  <div class="testi-top">
-    <div>
-      <div class="eyebrow scene">
-        <span class="eyebrow-line"></span>
-        Client Words
-      </div>
-      <h2 class="testi-h scene scene-delay-1">What clients <em>say</em></h2>
-    </div>
-    <p class="testi-note scene scene-delay-2">Results from real campaigns. Specific, measurable, and repeatable.</p>
-  </div>
-  <div class="testi-grid">
-    <div class="testi-card scene">
-      <div class="testi-q">"</div>
-      <p class="testi-body">Working with SCRIPTMINT was a game-changer. Our email open rates jumped 40% within the first campaign. The copy did not just sound good. It converted.</p>
-      <div class="testi-sig">
-        <div class="testi-av">JM</div>
-        <div>
-          <div class="testi-name">James M.</div>
-          <div class="testi-role">Founder, SaaS Startup</div>
-        </div>
-      </div>
-    </div>
-    <div class="testi-card scene scene-delay-1">
-      <div class="testi-q">"</div>
-      <p class="testi-body">I have hired copywriters before, but none who understood our brand voice this fast. The landing page copy brought our bounce rate down and doubled sign-ups.</p>
-      <div class="testi-sig">
-        <div class="testi-av">SR</div>
-        <div>
-          <div class="testi-name">Sophie R.</div>
-          <div class="testi-role">Marketing Director, E-commerce</div>
-        </div>
-      </div>
-    </div>
-    <div class="testi-card scene scene-delay-2">
-      <div class="testi-q">"</div>
-      <p class="testi-body">The cold email sequence was absolutely dialled in. Three meetings booked in the first week. I was not expecting results that fast. Genuinely impressive work.</p>
-      <div class="testi-sig">
-        <div class="testi-av">DK</div>
-        <div>
-          <div class="testi-name">Daniel K.</div>
-          <div class="testi-role">B2B Sales Consultant</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ==========================================
-     SCENE 8 — CONTACT (DARK, CINEMATIC)
-========================================== -->
+<!-- CONTACT — no WRITE. bg word, LinkedIn added -->
 <section class="contact" id="contact">
-  <div class="contact-bg-word" aria-hidden="true">WRITE.</div>
   <div class="contact-inner">
     <div>
       <div class="eyebrow scene">
@@ -1480,9 +622,14 @@ nav.stuck{
     </div>
     <div class="contact-right scene scene-delay-2">
       <div class="contact-sig" aria-hidden="true">Aurojit.</div>
-      <a class="contact-email-link" href="mailto:scriptmint.co@gmail.com">
-        scriptmint.co@gmail.com →
-      </a>
+      <div class="contact-links">
+        <a class="contact-email-link" href="mailto:scriptmint.co@gmail.com">
+          scriptmint.co@gmail.com →
+        </a>
+        <a class="contact-linkedin-link" href="https://www.linkedin.com/in/aurojit-swain-74a784368/" target="_blank">
+          LinkedIn →
+        </a>
+      </div>
       <p class="contact-note">Whether you need a single campaign or a complete content overhaul, reach out. Every project starts with a conversation.</p>
       <div>
         <div class="contact-who-name">Aurojit</div>
@@ -1493,6 +640,7 @@ nav.stuck{
   <div class="footer-bar">
     <div class="footer-brand"><span>SCRIPT</span>MINT</div>
     <div class="footer-copy">© 2026 SCRIPTMINT. All rights reserved.</div>
+    <a class="footer-linkedin" href="https://www.linkedin.com/in/aurojit-swain-74a784368/" target="_blank">LinkedIn →</a>
   </div>
 </section>
 
@@ -1506,934 +654,45 @@ nav.stuck{
 </div>
 
 <script>
-/* ============ CURSOR ============ */
 const cur=document.getElementById('cur');
 const ring=document.getElementById('cur-ring');
 let mx=0,my=0,rx=0,ry=0;
-document.addEventListener('mousemove',e=>{
-  mx=e.clientX;my=e.clientY;
-  cur.style.left=mx+'px';cur.style.top=my+'px';
-});
-(function lag(){
-  rx+=(mx-rx)*.11;ry+=(my-ry)*.11;
-  ring.style.left=rx+'px';ring.style.top=ry+'px';
-  requestAnimationFrame(lag);
-})();
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function lag(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(lag);})();
 document.addEventListener('mousedown',()=>cur.classList.add('click'));
 document.addEventListener('mouseup',()=>cur.classList.remove('click'));
-function hookHover(els){
-  els.forEach(el=>{
-    el.addEventListener('mouseenter',()=>{cur.classList.add('big');ring.classList.add('big');});
-    el.addEventListener('mouseleave',()=>{cur.classList.remove('big');ring.classList.remove('big');});
-  });
-}
-hookHover(document.querySelectorAll('a,button,.f-p,.work-row-head,.svc-row,.pillar,.testi-card,.step'));
+function hookHover(els){els.forEach(el=>{el.addEventListener('mouseenter',()=>{cur.classList.add('big');ring.classList.add('big');});el.addEventListener('mouseleave',()=>{cur.classList.remove('big');ring.classList.remove('big');});});}
+hookHover(document.querySelectorAll('a,button,.f-p,.work-row-head,.svc-card,.pillar-dark,.step'));
 
-/* ============ NAV SCROLL ============ */
-window.addEventListener('scroll',()=>{
-  document.getElementById('nav').classList.toggle('stuck',window.scrollY>50);
-});
+window.addEventListener('scroll',()=>{document.getElementById('nav').classList.toggle('stuck',window.scrollY>50);});
 
-/* ============ SCROLL REVEAL ============ */
-const obs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);}});
-},{threshold:.08});
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);}});},{threshold:.08});
 document.querySelectorAll('.scene').forEach(el=>obs.observe(el));
 
-/* ============ PORTFOLIO DATA ============ */
 const DATA=[
-  {id:1,company:"EmberBottle",industry:"Consumer Products / Drinkware",copyType:"Facebook Ad Copy",group:"Ad",tabs:[
-    {label:"Office — The Grind",num:"Variation 01",content:`STATIC POSTER VISUAL
-Background: person hunched at a laptop, mid-grind, blurred. Screen glow on their face.
-Foreground: EmberBottle sharp, still, amber light pulsing quietly. Nobody's looking at it. Waiting. Still perfect.
-
-One line: "Your work can wait. Your coffee shouldn't have to."
-Small brand tag: EMBERBOTTLE  ALWAYS A PERFECT SIP.
-
-FACEBOOK REEL SCRIPT
-
-Scene: Office. Guy walks in, fresh coffee in hand. Manager appears before he sits down. He's gone.
-Camera stays on the desk. His coffee just sitting there. His colleague's EmberBottle, amber light blinking. Unbothered.
-Seven minutes later he's back. Takes a sip. Fine. Just not what it was.
-He glances at the bottle. His colleague sips slow, exhales like it's the first one.
-
-Him: "Still good?"
-Colleague holds it out. "Three hours."
-
-Cut to black.
-EmberBottle.
-ALWAYS A PERFECT SIP.`},
-    {label:"Gym — The Earned Drink",num:"Variation 02",content:`STATIC POSTER VISUAL
-Background: gym floor, weights blurred out, that post-workout haze.
-Foreground: EmberBottle sharp, cold condensation, sitting on a bench like it owns the place.
-
-One line: "Your workout was hard enough. Your drink shouldn't be a letdown too."
-
-FACEBOOK REEL SCRIPT
-
-Scene: Gym floor. Guy deep in a set. Two bros hyping him through the last rep.
-Set done. He reaches for his bottle. Post workout electrolytes. He earned this.
-Takes a sip. Pulls a face. Warm. Wrong warm. He forces it down.
-His boy across the bench reaches into his bag, pulls out his EmberBottle, holds it out.
-Guy sips. Ice cold. Exactly right. His whole face resets.
-His boy shrugs like YEAH. I know.
-
-Cut to black.
-EmberBottle.
-ALWAYS A PERFECT SIP.`},
-    {label:"Strategy Notes",num:"Notes",isNotes:true,content:`Each ad targets a distinct identity your audience holds: the corporate professional, the gym guy, the traveller. People don't buy products, they buy things that feel made for them specifically.
-
-Running all three as an A/B/C test tells you which identity your cold audience connects with most.
-
-The creative approach is the same across all three: no one is sold to. The product shows up the way a good friend would, quietly, at exactly the right moment. That's intentional.`}
-  ]},
-  {id:2,company:"SyncDesk",industry:"SaaS / Productivity",copyType:"Landing Page",group:"Landing",tabs:[
-    {label:"Full Page Copy",num:"Landing Page",content:`HERO
-Your team isn't the problem. Your tools are.
-
-SyncDesk connects Slack, Notion, Google Workspace, and your CRM into one place so your team actually works instead of managing the chaos between apps.
-
-Start Free, No Card Required. 14-day trial. Full access.
-
-PROBLEM SECTION
-Someone made a decision in Slack. Nobody updated Notion. The task exists in three different places and is owned by nobody. And somehow the first thirty minutes of Monday are just everyone trying to figure out where last week ended.
-
-That's not a people problem. That's what happens when five tools aren't talking to each other.
-
-SOLUTION SECTION
-One workspace. Everything connected. Nothing that needs babysitting.
-
-SyncDesk doesn't replace the tools your team already uses. It connects them. Tasks get created, assigned, and tracked automatically.
-
-No dev setup. No config calls. Pre-built workflows live in minutes.
-
-CLOSING CTA
-Stop managing your tools. Start running your team.
-
-2,000+ teams stopped losing work to the gaps between apps.
-
-Start Your Free 14-Day Trial`},
-    {label:"Strategy Notes",num:"Notes",isNotes:true,content:`The hero lost the subheadline clutter and became a single punch followed by one clean supporting line.
-
-The problem section is where the biggest gain happened. "Overhead wearing a workflow's clothes" is the kind of slightly imperfect line that sticks.
-
-The villain throughout is the fragmented tool stack, never the team, never the person reading. That's the through line that makes someone feel understood before they're sold anything.`}
-  ]},
-  {id:3,company:"FlowPilot",industry:"SaaS / Workflow Automation",copyType:"Cold Email Sequence",group:"Email",tabs:[
-    {label:"Email 1 — The Hook",num:"Day 0",content:`Subject: The task is still in your Slack. From Tuesday.
-
-Hi [First Name],
-
-Your team didn't drop the ball. The ball just never got picked up.
-
-Someone brought it up in a thread, three people reacted with a thumbs up, and then Slack moved on. No ticket. No owner. No follow-up.
-
-That's not a people problem. That's just how Slack works. It's built for conversation, not accountability.
-
-FlowPilot watches your Slack conversations and turns what gets decided into what gets done, automatically pulling out action items, putting them in front of the right person.
-
-Takes 3 minutes to connect. [14-day free trial, no card]
-
-[Your Name]
-FlowPilot
-
-P.S. The task from Tuesday is still there if you want to find it. Third thread down, buried under the standup bot.`},
-    {label:"Email 2 — The Nudge",num:"Day 3-4",content:`Subject: Still losing tasks in Slack?
-
-Hi [First Name],
-
-Quick one.
-
-If nothing's changed since my last email, decisions still getting lost, someone still playing unofficial task tracker, the trial is still there whenever it makes sense.
-
-No re-pitch. Just a genuine "this is worth 3 minutes of your time if the problem still exists."
-
-[Start free trial] or [grab a 15-min demo]
-
-[Your Name]
-
-P.S. Full access. 14 days. No card.`},
-    {label:"Email 3 — The Exit",num:"Day 7-8",content:`Subject: You know where we are
-
-Hi [First Name],
-
-This is the last time I'll reach out, and I'm okay with that.
-
-FlowPilot works best for people who already feel the problem. If you haven't felt it yet, the timing just isn't right.
-
-But if there's a part of you that knows your team is one bad sprint away from things getting messy, that's exactly who this was built for.
-
-14 days, free, no card. It's there when you're ready.
-
-[Your Name]
-
-P.S. The teams that find us usually say they wish they hadn't waited as long as they did.`},
-    {label:"Strategy Notes",num:"Notes",isNotes:true,content:`Email 1 opens by defending the reader before they feel accused. Pain first, solution almost incidental.
-
-Email 2 is six lines. Respects that they've already seen your pitch and don't need it again.
-
-Email 3 is confident, not apologetic. "Works best for people who already feel the problem" makes the reader ask themselves if they're that person. They almost always are.
-
-Keep the reply-to a real name, not hello@. Cold emails from a human get opened, cold emails from a brand get deleted.`}
-  ]},
-  {id:4,company:"GrowthForge",industry:"B2B / Sales Consulting",copyType:"Cold Email Sequence",group:"Email",tabs:[
-    {label:"Email 1 — Reality Check",num:"Day 0",content:`Subject: Your pipeline shouldn't feel like gambling
-
-Hi [First Name],
-
-You closed three deals last month and two the month before. Good numbers. But you have no real idea how to repeat that, and that's the actual problem.
-
-That's not a pipeline, that's just luck with a CRM on top.
-
-That's exactly the gap we work in at GrowthForge. If it's something you're thinking about, [grab 20 minutes].
-
-[Your Name]
-GrowthForge
-
-P.S. We only work with B2B SaaS teams of 5-50. If that's you, this will probably be the most useful 20 minutes you spend this month.`},
-    {label:"Email 2 — The Reframe",num:"Day 3-4",content:`Subject: Re: Your pipeline shouldn't feel like gambling
-
-Hi [First Name],
-
-The problem isn't effort. It's that outbound is a system problem and you can't hire your way into a system you haven't built yet.
-
-That gap gets more expensive every month it sits. Not dramatically, just quietly, predictably, until one bad quarter makes it very loud.
-
-[Grab 20 minutes] if any of that landed.
-
-[Your Name]`},
-    {label:"Email 3 — The Exit",num:"Day 7-8",content:`Subject: Your pipeline won't fix itself
-
-Hi [First Name],
-
-Last one, and I'll keep it honest.
-
-The question is just whether the pipeline is keeping up with your growth, or quietly becoming the thing that slows everything else down.
-
-If it's the latter, that doesn't fix itself. It just becomes the new normal until it isn't.
-
-We're here when it stops feeling acceptable.
-
-[Your Name]`},
-    {label:"Strategy Notes",num:"Notes",isNotes:true,content:`Email 1 opens with a specific, uncomfortable observation. "Luck with a CRM on top" stings because it's specific enough to be true.
-
-Email 2 names the real problem: it's a system problem, not a headcount problem. You can't hire your way into a system you haven't built.
-
-Email 3: "Becomes the new normal until it isn't" is the cost line, calm and inevitable. "When it stops feeling acceptable" makes them measure how acceptable it currently feels.`}
-  ]},
-  {id:5,company:"MetricFlow",industry:"SaaS / Marketing Analytics",copyType:"X / Twitter Ad Copy",group:"Ad",tabs:[
-    {label:"Revenue Spike",num:"Variation 01",content:`STATIC POSTER VISUAL
-Background: dark mode dashboard, blurred numbers everywhere, four different tabs open.
-Foreground: one clean MetricFlow dashboard, single spike highlighted.
-
-One line: "Everyone's guessing. You already know."
-Small brand tag: METRICFLOW  ONE DASHBOARD.
-
-X REEL SCRIPT  No voiceover. Captions only. Fast cuts.
-
-Scene 1: Slack blowing up. 11:58pm.
-Caption: "Revenue just spiked. Nobody knows why."
-
-Scene 2: Four dashboards open. Numbers everywhere.
-Caption: "So you do what you always do."
-
-Scene 3: Spreadsheet open. Coffee cold. Clock 1:14am.
-Caption: "Guess. Hope. Present it like you're sure."
-
-Hard cut. MetricFlow. One campaign glowing as the source.
-Caption: "Or just know."
-
-Cut to black.
-MetricFlow. One dashboard. 14-day free trial.`},
-    {label:"Platform Wars",num:"Variation 02",content:`STATIC POSTER VISUAL
-One line: "Three platforms. Three answers. One is lying."
-
-X REEL SCRIPT
-
-Scene 1: Meta dashboard. Revenue up 34%.
-Caption: "Meta says it's working."
-
-Scene 2: Google dashboard. Same period. Different number.
-Caption: "Google disagrees."
-
-Scene 3: Spreadsheet open. Third number. Third story.
-Caption: "Your spreadsheet has its own opinion."
-
-Scene 4: Someone presenting numbers in a meeting. Quietly not sure which are real.
-Caption: "So you pick the one that sounds best and move on."
-
-Hard cut. MetricFlow. One screen. AI attribution. One number.
-
-Cut to black.
-Stop optimising by gut feel.
-MetricFlow. 14-day free trial. No card.`},
-    {label:"Strategy Notes",num:"Notes",isNotes:true,content:`X rewards copy that doesn't feel like it was written by someone trying to sell you something. All three variations lean into that.
-
-Variation 1 works because the midnight metric spike isn't a hypothetical. It's a Tuesday for anyone running growth at scale.
-Variation 2 leans on the one thing every performance marketer quietly knows but never says: they're picking whichever number sounds best in the meeting.
-
-The reel format is intentional. Captions only, no voiceover. X's feed moves fast and sound is off by default.`}
-  ]},
-  {id:6,company:"IronForge",industry:"Health and Fitness / Online Coaching",copyType:"Instagram Reel Script",group:"Video",tabs:[
-    {label:"Full Script",num:"Reel Script",content:`IRONFORGE STRENGTH SYSTEM  INSTAGRAM REEL SCRIPT
-Runtime: 45-60 seconds | Tone: Direct, real, no hype
-
-HOOK A (to camera): "If you've been going to the gym for over a year and you still don't look like it, this is why."
-
-HOOK B (text overlay): "You're not lazy. Your program just sucks."
-
-BODY:
-"Here's what most guys do. They go to the gym 4, 5 times a week. They try random routines they found online. They're consistent for 3 weeks then something comes up, they lose momentum, and 6 months later they're basically starting over.
-
-The problem isn't motivation. It's that there's no system. No progressive overload. No structure. No way to actually know if you're improving, so you never do."
-
-PIVOT:
-"IronForge is a 12-week strength system built around one thing: measurable progress, every single week."
-
-CTA (direct to camera):
-"Link in bio. 7-day free trial. Start this week. Or keep doing what you're doing and wonder why nothing's changing."
-
-CAPTION:
-Most guys aren't seeing progress because they're training without a system.
-IronForge fixes that. 12 weeks. Progressive overload built in.
-7-day free trial, link in bio.`},
-    {label:"Strategy Notes",num:"Notes",isNotes:true,content:`The script leads with inconsistency because it's the less defensive entry. "Your program sucks" is easier to hear than "you're intimidated."
-
-The ending deliberately uses a mild negative close because it works on this audience. It's a direct challenge that activates exactly the competitive instinct your target demographic responds to, without being condescending.
-
-Open on a direct-to-camera talking head. No gym intro, no music montage. The hook has to land in 2 seconds before someone swipes. Return to face on the CTA. Eye contact closes harder than B-roll.`}
-  ]},
-  {id:7,company:"TaskZen",industry:"SaaS / Productivity",copyType:"Instagram Reel Script",group:"Video",tabs:[
-    {label:"Full Script",num:"Reel Script",content:`STATIC POSTER VISUAL
-One line: "You didn't waste today. Your tools did."
-Small brand tag: TASKZEN  KNOW EXACTLY WHAT TO DO NEXT.
-
-INSTAGRAM REEL SCRIPT
-Handheld. Real. No voiceover. Just the sound of notifications.
-
-Scene 1: 9am. Someone opens their laptop. Optimistic.
-Caption: "You had a plan."
-
-Scene 2: Rapid cuts. Slack. Email. Calendar. Slack again. Six tabs.
-Caption: "Then Monday happened."
-
-Scene 3: 5pm. Slumped. That specific exhaustion. Not tired from working. Tired from working at nothing.
-Caption: "Busy all day."
-Caption: "Nothing actually done."
-
-Hard cut. TaskZen. One task highlighted. Not ten. One.
-Caption: "This is what clarity feels like."
-
-Scene 4: Next morning. Opens TaskZen first. No chaos. Just starts.
-Caption: "Same person. Different tools."
-
-Cut to black.
-You didn't waste today. Your tools did.
-TaskZen  7 days free. Link in bio.`},
-    {label:"Strategy Notes",num:"Notes",isNotes:true,content:`Hook opens on that 5pm moment, not the chaos, the aftermath. The blank stare at a laptop full of activity that produced nothing. That's the two seconds that stops the scroll.
-
-Fast-cut screen recordings do the heavy lifting during the body section. Then one hard cut to TaskZen. One task. One clear answer. The contrast is the pitch.
-
-Hook A "Busy all day. Nothing actually done." works best spoken to camera.
-Hook B "You didn't waste today. Your tools did." runs better as a silent text overlay for cold audiences who've tried apps before and given up.`}
-  ]},
-  {id:8,company:"Atlas Supply Co.",industry:"Apparel / Performance Gear",copyType:"Welcome Email Sequence",group:"Email",tabs:[
-    {label:"Email 1 — Welcome",num:"Day 0",content:`Subject: Welcome to Atlas.
-
-Hey [First Name],
-
-Good to have you here.
-
-Most people find Atlas because they got tired of buying gear that looked great and fell apart in three months. Or gear that was built to perform but looked like it was designed by someone who's never actually been outside. That gap is exactly why Atlas exists.
-
-Everything we make is built to take real conditions. Early mornings, rough trails, long sessions, weather that doesn't care about your plans.
-
-No seasonal drops engineered to go out of style. No inflated prices for a logo. Just gear that earns its place in your bag and stays there.
-
-The Atlas Team
-
-P.S. If you're not sure what to grab first or have questions about fit and materials, just reply. A real person will get back to you.`},
-    {label:"Email 2 — Best-Sellers",num:"Day 2",content:`Subject: The gear people actually come back for.
-
-Hey [First Name],
-
-Most gear has one good season in it. Then slowly starts to let you down in small ways you almost don't notice until it's gone.
-
-Atlas pieces don't do that.
-
-Performance Training Shirt: The one customers say they wish they'd bought three of on the first order. No tags, no bulk, nothing that bunches mid-session.
-
-Durable Training Pants: Four-way stretch, reinforced seams, pockets that actually hold things. Built for squats and trail runs in the same breath.
-
-All-Weather Jacket: Wind-resistant, packable, earns a permanent spot in your bag because you never quite know when you'll need it.
-
-Every piece ships when it's ready.
-
-The Atlas Team`},
-    {label:"Email 3 — Price Objection",num:"Day 4",content:`Subject: Is Atlas worth the price? Honest answer.
-
-Hey [First Name],
-
-It costs more than most. That's true and we're not going to dance around it.
-
-Most people who ask that question have already been through the cycle. Buy something cheaper, watch it pill and fade, replace it. Do that twice and you've spent Atlas money and had worse gear both times.
-
-Atlas is built to last years. Not seasons. Years.
-
-"I've had my Atlas training shirt for two years. Still looks new. Washed it probably 150 times." Marcus T.
-"Wore the jacket on a 3-day trail in variable weather. Performed exactly like the description." Jamie R.
-
-Every purchase is backed by a straightforward guarantee. If something fails on our end, we make it right.
-
-The Atlas Team`},
-    {label:"Email 4 — First Purchase",num:"Day 6",content:`Subject: Your first Atlas order, make it count.
-
-Hey [First Name],
-
-ATLAS15 takes 15% off at checkout. Valid for the next 72 hours.
-
-Not sure where to start:
-Training mostly in the gym? The Performance Shirt and Training Pants together.
-Mostly outdoors or trail? Start with the All-Weather Jacket.
-Both? The Training Shirt is your entry point.
-
-Every order is backed by our guarantee.
-
-The Atlas Team`},
-    {label:"Strategy Notes",num:"Notes",isNotes:true,content:`Email 1 opens by naming exactly who finds Atlas and why. Recognition happens before any product is mentioned.
-
-Email 2 describes each hero product by what it actually does for the person wearing them.
-
-Email 3 names the price question directly. The cycle framing does the math for them.
-
-Email 4: The discount arrives here, not in Email 1. A subscriber who's read three emails before seeing a code is a buyer, not a coupon hunter.`}
-  ]},
-  {id:9,company:"Northlane Apparel",industry:"Fashion / Streetwear",copyType:"Abandoned Cart Sequence",group:"Email",tabs:[
-    {label:"Email 1 — Soft Reminder",num:"1-2 hrs",content:`Subject: Still yours. For now.
-
-Hey [First Name],
-
-You picked it for a reason.
-
-Most people scroll past. You stopped, you chose, you were close. The cart's still sitting there with your name on it.
-
-Northlane runs limited quantities on every drop. No restocks once it's gone. When it sells out it's just gone. And the size you picked tends to go first.
-
-[PRODUCT IMAGE]
-Complete Your Order
-
-If something stopped you, sizing, shipping, anything at all, just reply.
-
-Northlane`},
-    {label:"Email 2 — Value Push",num:"24 hrs",content:`Subject: While you were gone.
-
-Hey [First Name],
-
-Most gear makes you choose. Either it performs or it looks right.
-
-That's the gap Northlane sits in. Moisture-wicking, four-way stretch, cuts that move through a 6am session and still look deliberate at 8pm.
-
-The piece in your cart was built around that exact idea. And because Northlane drops in limited quantities, what's sitting there now is genuinely what's left.
-
-Return to My Cart
-
-Northlane`},
-    {label:"Email 3 — Final Nudge",num:"48-72 hrs",content:`Subject: Last one, and we're making it easier.
-
-Hey [First Name],
-
-Last reminder, genuinely. FIRST10 takes 10% off at checkout. 24 hours.
-
-Free returns within 30 days if the fit isn't right. And when this drop sells out there's no restock.
-
-Northlane`},
-    {label:"Strategy Notes",num:"Notes",isNotes:true,content:`Email 1: Short, respectful, zero pressure. "You picked it for a reason" reframes the return as finishing something rather than starting something. No discount yet.
-
-Email 2: For the person who's been comparing. The streetwear versus performance-gear tension is the exact conversation happening in their head.
-
-Email 3: The discount arrives here, not before. Free returns earns its place because sizing anxiety is the silent killer of mid-premium apparel carts.`}
-  ]},
-  {id:10,company:"VitalRise",industry:"Health and Wellness / Supplements",copyType:"Promotional Email",group:"Email",tabs:[
-    {label:"Version A — Cold List",num:"Cold List",content:`Subject: You're not tired. You're caffeinated wrong.
-
-Hey [First Name],
-
-The 3pm crash isn't a willpower problem. It's a caffeine problem.
-
-You hit it hard in the morning, it works for a few hours, and then you're repaying the debt all afternoon. Foggy, slow, reaching for another cup that just pushes the crash back an hour. That's not an energy strategy. That's dependency with a productivity rebrand.
-
-VitalRise Daily Performance Capsules were built for the gap caffeine can't fill. Ashwagandha, rhodiola, B-vitamins. Clean energy from morning through the afternoon. No spike, no crash.
-
-It feels like being yourself on a good day.
-
-This week only: 20% off your first order with code RISE20.
-
-Try VitalRise: Claim 20% Off`},
-    {label:"Version B — Warm List",num:"Warm List",content:`Subject: You're not tired. You're caffeinated wrong.
-
-Hey [First Name],
-
-Next [X hours], VitalRise is 20% off. Code RISE20.
-
-If you've been running on caffeine and hoping the crash doesn't hit before 5pm, it's for you. Adaptogens don't spike you and collect the debt later. Most people notice something different by day four.
-
-Just a version of your afternoon you've probably forgotten was possible.
-
-Offer closes [date]. 30-day money-back guarantee.`},
-    {label:"Strategy Notes",num:"Notes",isNotes:true,content:`Version A earns the offer. It spends the whole email in the reader's experience before the product ever shows up. Right call for a colder list that hasn't built much trust yet.
-
-Version B respects what a warm subscriber already knows. They're close to buying. They don't need the story, they need the signal that now is the right time.
-
-The guarantee earns its place in both. First-time supplement buyers have been burned before and the money-back removes the only objection that actually stops them.`}
-  ]},
-  {id:11,company:"ScaleLab",industry:"Marketing / Business Growth",copyType:"Opt-in Page",group:"Landing",tabs:[
-    {label:"Full Page Copy",num:"Opt-in Page",content:`SCALELAB OPT-IN PAGE
-
-You don't have a client problem. You have a system problem.
-
-Most early-stage founders are good at the work. What nobody gave them was a pipeline that runs without them chasing it every week. So they chase it. And some weeks it works. And some weeks it doesn't. And the inconsistency becomes the thing that keeps them up at night.
-
-The 5-Day Client Acquisition Blueprint is a zero-ads funnel framework. One lesson a day for five days. No paid campaigns. No tech stack. No complexity.
-
-WHAT YOU'LL GET
-
-Day 1: The real reason lead gen feels inconsistent.
-Day 2: Your funnel in plain language. Three parts.
-Day 3: The copy that actually converts.
-Day 4: The follow-up system that runs without you.
-Day 5: Your 30-day plan to have it live.
-
-WHO THIS IS FOR
-You're one to three years in and clients still don't come consistently. You want something you can trust to still be working six months from now.
-
-WHO THIS ISN'T FOR
-Already turning away more leads than you can handle? This isn't for you.
-
-FINAL CTA
-Your next client shouldn't be a mystery.
-
-Yes, Send Me the Blueprint. Free. Instant delivery. No card required.`},
-    {label:"Strategy Notes",num:"Notes",isNotes:true,content:`The whole page is built around three questions the reader asks silently in order: what do I get, is this actually for me, can I trust the person handing it to me.
-
-The "not for you" section stays. It consistently lifts opt-in conversions, it signals confidence, and filters out people who won't engage with the sequence anyway. Makes the right person feel chosen rather than targeted.
-
-The testimonials are mapped deliberately to three versions of the same person at different points in their frustration.`}
-  ]},
-  {id:12,company:"LumiSkin",industry:"Beauty and Skincare",copyType:"Instagram Ad Copy",group:"Ad",tabs:[
-    {label:"Your Skin Was Never the Problem",num:"Variation 01",content:`STATIC POSTER VISUAL
-Background: bathroom shelf, blurred, every product she's tried and given up on.
-Foreground: LumiSkin sharp, morning light catching it just right.
-
-One line: "Your skin was never the problem."
-Small brand tag: LUMISKIN  GLOW DIFFERENT.
-
-INSTAGRAM REEL SCRIPT  UGC style. Handheld.
-
-Scene 1: Someone scanning their face in the mirror. That quiet honest look everyone does alone.
-Caption: "I stopped expecting anything to actually work."
-
-Scene 2: Shelf full of half-used serums. A hand picking up LumiSkin. Sceptical.
-Caption: "Tried this anyway."
-
-Scene 3: Week 1. Week 2. Week 3. Skin getting quieter, less red, more even. Undeniably different.
-Caption: "Didn't wake up transformed. Just slowly started recognising myself again."
-
-Cut to product.
-Last frame: Your skin was never the problem.
-LumiSkin: 20% off your first bottle.`},
-    {label:"Same Routine. Glowing Different.",num:"Variation 02",content:`INSTAGRAM REEL SCRIPT
-
-Scene 1: Girl doing her usual morning routine. Unbothered.
-
-Scene 2: Friend leans in, genuinely curious.
-Friend: "Wait, what's going on with your skin?"
-She barely looks up.
-Her: "My serum."
-That's it. No pitch. No explanation. Just: my serum.
-
-Scene 3: Close-up. Natural light. Skin quietly glowing. Real.
-Caption: "Vitamin C. Niacinamide. 2-4 weeks."
-
-Last frame:
-Glowing different.
-LumiSkin: 20% off your first bottle.`},
-    {label:"Strategy Notes",num:"Notes",isNotes:true,content:`Nobody is sold to in any of these. Variation 1 feels like something a real girl posted from her bathroom at 7am. Variation 2 lives entirely in two words, "my serum," because that's how this generation talks about things they genuinely like.
-
-Testing priority:
-Variation 1 to cold audiences first.
-Variation 2 to retargeting once they know the brand.
-
-The signature line "Glowing different" runs through all three. Third time someone sees it they're finishing it before it hits the screen. That's when the brand starts to stick.`}
-  ]},
-  {id:13,company:"SwiftFix Plumbing",industry:"Home Services",copyType:"Google Search Ads",group:"Ad",tabs:[
-    {label:"Ad Set 1 — Emergency",num:"Ad Set 01",content:`SWIFTFIX PLUMBING  GOOGLE SEARCH ADS
-Best for: "emergency plumber near me," "burst pipe," "plumber right now"
-
-HEADLINES (30 characters max each)
-1. SwiftFix — Here in 60 Min.
-2. Burst Pipe? We're Coming.
-3. No Wait. No Surprise Bill.
-4. Licensed. On Call 24/7.
-5. Fix It Right or It's Free
-6. Same-Day Repairs. Guaranteed.
-7. Available Right Now
-8. Leak? We're Already Moving.
-9. Upfront Price. No Surprises.
-
-DESCRIPTIONS (90 characters max each)
-1. Burst pipe. Blocked drain. Water heater gone. We're there in 60 minutes, every time.
-2. We tell you the price before we start. No hidden fees. Fix it right or the job is free.
-3. Licensed plumbers, on call 24/7. Leaks, clogs, emergencies handled fast and right.`},
-    {label:"Ad Set 2 — Trust",num:"Ad Set 02",content:`SWIFTFIX PLUMBING  GOOGLE SEARCH ADS
-Best for: "reliable plumber," "plumber reviews," "best plumber near me"
-
-HEADLINES
-1. Fix It Right or It's Free
-2. 5-Star Rated. Local. Licensed.
-3. Price First. Work Second.
-4. No Surprises. Just Fixed.
-5. Trusted by Your Neighbours
-
-DESCRIPTIONS
-1. You get the price before we touch anything. No surprises. Fix it right or the job is free.
-2. Five-star rated by local homeowners. Licensed techs, same-day repairs, upfront quotes every time.`},
-    {label:"Strategy Notes",num:"Notes",isNotes:true,content:`The keyword strategy runs in two clear lanes and they shouldn't bleed into each other.
-
-Emergency terms run on Exact and Phrase match with Max Conversions bidding. These are the highest-intent searches in the account. Nobody in an emergency is price shopping.
-
-The negative keyword list needs to go in before the first impression is served. Block all learning-to-become-a-plumber queries from day one.
-
-Extensions aren't decoration. An ad with full extension coverage takes up more real estate on the results page and pushes competitors down.`}
-  ]},
-  {id:14,company:"WealthSpark",industry:"Finance / Investing",copyType:"Instagram Reel Script",group:"Video",tabs:[
-    {label:"The Mirror World",num:"Script 01",content:`INSTAGRAM REEL SCRIPT: Cinematic. Quiet. Feels like a short film.
-
-Scene 1: Couch. Night. He closes the trading app. Stares at nothing. That hollow quiet.
-
-Scene 2: TV flickers on. The screen shows him, same room. But this version is leaning forward. Actually doing something.
-Caption: "Who is that?"
-
-Scene 3: He walks toward the TV, reaches out and falls through.
-
-Scene 4: Mirror world. His other self turns around. Holds up the phone. WealthSpark open.
-Other him: "Three questions. That's all it asked."
-
-Scene 5: Goals. Timeline. Risk comfort. Portfolio built. Simple.
-Him: "That's it?"
-Other him shrugs. Hands him the phone.
-
-Scene 6: He snaps back to the couch. WealthSpark open. He starts.
-
-Cut to black.
-Turns out the hard part wasn't investing.
-It was finding WealthSpark.
-Download free. Link in bio.`},
-    {label:"The Reality Check",num:"Script 02",content:`INSTAGRAM REEL SCRIPT: Fast cuts. Captions carry everything.
-
-Scene 1: Salary notification hits.
-Caption: "Salary credited."
-
-Scene 2: Transfers to savings. Feels responsible.
-Caption: "Savings done."
-
-Scene 3: Opens investing app. Immediately overwhelmed. Closes it.
-Caption: "Investing? ...later."
-
-Scene 4: Text on screen.
-Caption: "Your savings account gives you 3%."
-Caption: "Inflation takes 6%."
-Caption: "You're losing money by doing nothing."
-
-Scene 5: That quiet realisation.
-Caption: "Nobody told me that."
-
-Scene 6: WealthSpark opens. Portfolio builds.
-Caption: "3 minutes. First portfolio. Done."
-
-Cut to black.
-The best time was last year.
-You're still early.
-WealthSpark: free download. Link in bio.`},
-    {label:"Strategy Notes",num:"Notes",isNotes:true,content:`These scripts were built around a single emotional truth: not laziness, not disinterest, but the specific paralysis of wanting to do the right thing and having no clear entry point.
-
-Script 1 is the cinematic one. The mirror world concept externalises an internal conversation everyone's already having. The "close the app and do nothing" beat gets a full second of silence. Don't cut there.
-
-Script 2 is the fast one. The emotional pivot from "feels responsible" to "oh, I'm actually losing money" needs to land in a single cut.
-
-On compliance: all end cards and captions should carry the SEBI-required disclaimer.`}
-  ]},
-  {id:15,company:"GlowNest",industry:"Beauty and Personal Care",copyType:"TikTok UGC Script",group:"Video",tabs:[
-    {label:"The Before / After Story",num:"Script 01",content:`TIKTOK SCRIPT "The Before/After Story"
-UGC. Bathroom or bedroom. Real light. Handheld.
-
-"I was spending $150 a month on facials. Then I found this."
-[Holds up the GlowNest mask.]
-
-"Dull skin, these little breakouts that just lived on my face rent-free no matter what I tried. I went through a whole shelf of stuff. Nothing."
-
-"Someone told me to try an LED mask and I thought: sure, I'll look completely unhinged, why not."
-Caption: "The unhinged era."
-
-"Three weeks. My skin is more even, the texture is actually smooth, and the spots genuinely fading. 10 minutes a day. Red light builds collagen, blue light handles the acne."
-
-[Takes mask off. Faces camera.]
-Caption: "3 weeks of daily use."
-
-"It's what $150 a month of facials was supposed to do. Except I own it now."
-Caption: "10 min/day. That's it."
-
-Delivery note: Say the last line quietly, almost to yourself. Not a sales line. A realisation.`},
-    {label:"The Educational Hook",num:"Script 02",content:`TIKTOK SCRIPT "The Educational Hook"
-
-"Dermatologists have been using LED light therapy for years. Here's why you can do it at home now for under $100."
-
-Caption: "Red light, collagen and glow."
-"Red light goes deep into the skin and triggers collagen production. That's what reduces fine lines and gives you that plump, healthy look that's hard to fake with products alone."
-
-Caption: "Blue light, kills acne bacteria."
-"Blue light works on the surface. Targets the bacteria that cause breakouts."
-
-"The problem was always access. One LED session at a dermatologist runs $75 to $150."
-
-"GlowNest puts both wavelengths into one mask. Ten minutes a day, at home."
-
-"Same science. Same wavelengths. You just own the tool instead of renting the appointment."
-
-Delivery note: "Own the tool instead of renting the appointment." Say it like you just thought of it. That's the tone that gets this one shared.`},
-    {label:"Strategy Notes",num:"Notes",isNotes:true,content:`The three scripts are built around one reframe: the reason someone hasn't tried LED therapy isn't scepticism about whether it works. It's that it always felt like something you had to book, travel to, and pay a clinic to do. The access was the barrier, not the belief.
-
-Script 1 leads. UGC story format is the highest-converting cold audience entry point for skincare DTC on TikTok.
-
-Script 2 is the saveable one. This audience fills in the rest themselves and shares it because it made them feel informed, not sold to.
-
-On compliance: no script should claim the mask treats or cures acne. Every result is framed as personal experience.`}
-  ]},
-  {id:16,company:"FlowPilot",industry:"SaaS / Workflow Automation",copyType:"Video Ad Scripts",group:"Video",tabs:[
-    {label:"The Tab Counter",num:"Script 01",content:`FLOWPILOT  SAAS AD SCRIPT — YouTube pre-roll, LinkedIn.
-
-Opens on screen recording. Real desktop. Eleven tabs. Slack pinging.
-Caption: "How many tabs do you have open right now?"
-
-VO: "Most business teams are running on six, seven, maybe eight different tools. And spending half their day manually moving information between them."
-
-VO: "Lead comes in. Someone updates the CRM. Someone else sends the follow-up. Someone else updates the tracker. Manually. Every time."
-
-[Cut to FlowPilot. Clean. Drag and drop. Workflow building in seconds.]
-VO: "FlowPilot connects all of it and automates the handoffs. One system, nothing manual."
-
-VO: "Free 14-day trial at FlowPilot.com. Ten minutes to set up."`},
-    {label:"Monday Morning",num:"Script 02",content:`FLOWPILOT  SAAS AD SCRIPT — Instagram / Facebook retargeting.
-
-Opens on someone at their desk. Coffee in hand. That specific Monday morning face.
-Caption: "47 unread emails. Three reports that were due Friday."
-
-VO: "For most ops and marketing teams, half the week is just admin. Copying data from one tool to another. Chasing people for updates. Running reports that could run themselves."
-
-VO: "It's not that the team isn't working. It's that the system is making them do work that shouldn't be theirs."
-
-[Cut to FlowPilot. Tasks assigning themselves. Reports generating.]
-VO: "FlowPilot automates all of it. No code. Works with the tools you're already using."
-
-[Pause.]
-VO: "14-day free trial. No card required."`},
-    {label:"Strategy Notes",num:"Notes",isNotes:true,content:`All three scripts are built around the same core truth: the team isn't the problem, the system is. That's the reframe that makes a B2B ad feel like a relief instead of a pitch.
-
-Script 1 leads. The tab counter hook is the lowest-friction entry point.
-
-Script 2 is the retargeting script. "The system is making them do work that shouldn't be theirs" is the line that converts.
-
-Thirty seconds is tight and it should stay that way. One problem, one solution, one CTA. Any additional feature mentioned past the eighteen-second mark is a conversion killer.
-
-Signature line: "Stop doing work your system should be doing."`}
-  ]},
-  {id:17,company:"SendLoop",industry:"SaaS / Email Outreach",copyType:"Video Ad Scripts",group:"Video",tabs:[
-    {label:"The Reply Rate Problem",num:"Script 01",content:`SENDLOOP  SAAS AD SCRIPT — YouTube pre-roll, LinkedIn.
-
-VO: "If your cold emails are getting under a 5% reply rate, the problem isn't your offer. It's your setup."
-
-VO: "Most business owners and agencies are still doing outreach the hard way. Templates that feel like templates. Follow-ups that go out late or don't go out at all. Deliverability issues that put you in spam before anyone reads a word."
-
-[Cut to SendLoop UI. Deliverability score moving into the green.]
-VO: "SendLoop fixes all three. Every email feels written for that person. Follow-ups run without you. And your emails actually land because deliverability is built in, not bolted on."
-
-VO: "Free trial at SendLoop.com. Your next reply is closer than you think."`},
-    {label:"Scale Without Hiring",num:"Script 02",content:`SENDLOOP  SAAS AD SCRIPT — Facebook / Instagram, agency owners.
-
-VO: "You don't need to hire another person for outreach. You need a better system."
-
-VO: "Here's what I see constantly with agencies and B2B founders. They know email works. But their process is too manual to scale and too inconsistent to rely on."
-Caption: "Write it. Send it. Wait. Forget to follow up. Repeat."
-
-VO: "Pipeline dries up and the answer they reach for is another hire. It's not. It's the system."
-
-[Cut to SendLoop.]
-VO: "You just show up to the replies."
-
-VO: "Start free at SendLoop.com."`},
-    {label:"Strategy Notes",num:"Notes",isNotes:true,content:`All three scripts are built around the same reframe: the reply rate isn't a writing problem or an offer problem. It's a setup problem. That removes the blame from the person running the outreach.
-
-Script 1 anchors the campaign. The deliverability angle is the sharpest edge and the one most competitors aren't leading with.
-
-Script 2 is for agency owners. "You just show up to the replies." Brief the talent to say it simply, almost like an afterthought. The less it sounds like a tagline the harder it lands.
-
-Signature line: "Everyone's sending. Not everyone's landing."`}
-  ]},
-  {id:18,company:"PeakMind Academy",industry:"Education / Online Courses",copyType:"Long-Form Sales Letter",group:"Strategy",tabs:[
-    {label:"Full Sales Letter",num:"Sales Letter",content:`PEAKMIND ACADEMY  LONG-FORM SALES LETTER
-
-Every focus tip you've ever tried was treating the symptom. Nobody went looking for the cause.
-
-You sit down to study. You're ready this time. Genuinely. Two hours blocked out.
-Twenty minutes later you've watched something you didn't choose to watch, and the tab you actually needed is buried under six others.
-
-That low, flat, foggy feeling settles back in.
-
-Here's what that feeling isn't: laziness. Weakness. A character flaw.
-Here's what it actually is: a brain that was never taught how to focus operating in an environment specifically engineered to make focusing harder.
-
-That's not a motivational problem. That's a training problem. And training problems have solutions.
-
-WHY EVERYTHING YOU'VE TRIED HASN'T STUCK
-Willpower isn't a strategy. It's a resource. One that depletes. In a world where the most sophisticated attention-capture systems ever built are running in your pocket every waking hour, that resource is being drained faster than it can recover.
-
-The top students don't do it on willpower. What they have is a set of cognitive habits that make deep focus their default rather than a daily battle.
-
-Nobody teaches this in school. That's the gap PeakMind was built for.
-
-WHAT PEAKMIND ACTUALLY DOES
-A structured 21-day cognitive training program. Fifteen to twenty minutes a day. Done consistently.
-
-Getting into real focus within minutes. Retaining what you read the first time. The 2pm fog, gone. Procrastination losing its grip. Not through force. Because the resistance to starting genuinely decreases.
-
-THE GUARANTEE
-Complete the first 21 days. Follow the system. If you don't notice a real improvement in your focus, contact us for a full refund. No conditions.
-
-Your brain was never the problem. It just never had a program.`},
-    {label:"Strategy Notes",num:"Notes",isNotes:true,content:`On the opening: Leads with the scene, not the diagnosis. The reader sees themselves before they've decided whether to trust you.
-
-On the reframe: "That's not a motivational problem, that's a training problem" is the load-bearing line of the letter. Everything before builds pressure, everything after offers direction.
-
-On length: Every section has a job: identification, understanding, reframe, proof, social validation, risk removal, decision. Nothing is filler.
-
-On the guarantee: Late placement signals confidence, not defensiveness.
-
-On the closing: "Your brain was never the problem, it just never had a program" is the thesis of the entire letter in one sentence. Leave it alone.`}
-  ]},
-  {id:19,company:"InsightLoop",industry:"SaaS / Marketing Analytics",copyType:"Meta and LinkedIn Ad Copy",group:"Ad",tabs:[
-    {label:"Meta Feed — DTC",num:"Ad 01",content:`INSIGHTLOOP  META FEED AD
-
-You're spending $50k a month on ads.
-Do you actually know which ones are profitable?
-
-Not which ones are getting clicks. Which ones are generating real profit after returns, after shipping, after COGS.
-
-For most DTC teams that answer lives somewhere between Meta's reporting, Google's reporting, Shopify's dashboard, and a spreadsheet nobody fully trusts anymore.
-
-InsightLoop pulls it all into one place. Meta, Google, Shopify, unified, profit-level attribution in real time.
-
-14-day free trial. Connect your accounts in under 10 minutes.
-
-See What's Actually Working. Start Free.`},
-    {label:"LinkedIn — Senior Buyer",num:"Ad 02",content:`INSIGHTLOOP  LINKEDIN FEED AD
-
-Your ad data isn't lying to you on purpose. But it is lying to you.
-
-Meta says your ROAS is 4.2. Google says 3.8. Your actual blended return after you back out returns, shipping, and COGS? Nobody knows for certain because nobody has a single source of truth.
-
-InsightLoop was built specifically for this.
-
-It integrates Meta Ads, Google Ads, and Shopify into one unified attribution view, profit-level, not platform-reported.
-
-The AI layer flags wasted spend automatically, identifies which creative patterns are actually driving conversions, and tells you what to scale, cut, or test next.
-
-Full access. No analyst required. Free for 14 days.`},
-    {label:"Strategy Notes",num:"Notes",isNotes:true,content:`All three ads are built around the same core truth: the data your team is making decisions from isn't wrong because nobody's paying attention. It's wrong because every platform reports in a way that serves itself.
-
-Ad 1 leads cold on Meta. The hook separates clicks and CTR from profit immediately. That distinction is the whole product in one sentence.
-
-Ad 2 is the LinkedIn version for the more senior buyer. The ROAS discrepancy framing validates an experience every performance lead has had and never seen named cleanly in an ad.
-
-Sequencing: Ad 1 cold, retargeting to anyone who engaged, Ad 2 running parallel on LinkedIn.`}
-  ]},
-  {id:20,company:"EliteCloser",industry:"Finance / Sales Education",copyType:"VSL Script",group:"Strategy",tabs:[
-    {label:"Hook and Problem",num:"Sec 1-2",content:`ELITECLOSER SALES ACCELERATOR  VSL SCRIPT
-
-SECTION 1: HOOK
-
-"There's a skill you can learn in 8 weeks that pays one lakh to five lakh a month, from your laptop, from anywhere, without a degree, without a product, and without any background in sales.
-
-Right now, the biggest coaches, consultants, and agency owners in India are actively looking for people who have this skill. Not finding enough of them.
-
-That skill is high-ticket closing."
-
-SECTION 2: THE PROBLEM
-
-"Are you earning what you're actually worth?
-
-Most people watching this are stuck in one of two places. Either in a job that pays just enough to stay but not enough to feel free. Or freelancing, building something, trying to make it work but the income is inconsistent.
-
-Here's what nobody says out loud: it's not because you're not talented.
-
-It's because the skill you have right now has a ceiling built into it.
-
-A designer earns what designers earn. A developer earns what developers earn.
-
-But a closer earns a percentage of every deal they close. And there is no ceiling on that."`},
-    {label:"Reframe and Solution",num:"Sec 3-4",content:`SECTION 3: BREAKING THE LIMITING BELIEF
-
-"I know what some of you are thinking. 'I'm not a sales person.' 'I don't want to pressure anyone.'
-
-This is not cold calling. It's not convincing someone to buy something they don't need.
-
-It's a conversation. A structured, honest conversation, where your job is to help someone make a decision they've already been thinking about.
-
-And here's the part that matters if you're not ready to quit your job yet: you can start this part-time."
-
-SECTION 4: THE SOLUTION
-
-"EliteCloser is an 8-week program built to take someone with zero sales background and give them everything they need to close high-ticket offers professionally and consistently.
-
-Weeks one and two: the foundation.
-Weeks three and four: objection handling.
-Weeks five and six: live call simulations.
-Weeks seven and eight: placement and launch. Connected directly to coaches and agency owners actively looking for trained closers."`},
-    {label:"Proof, Offer and CTA",num:"Sec 5-8",content:`SECTION 5: PROOF
-
-"[STUDENT RESULT 1] Real name, specific background, exact income before and after, timeline.
-[STUDENT RESULT 2] Someone with no sales experience at all.
-[STUDENT RESULT 3] Someone who started part-time while keeping their job.
-
-These aren't outliers. They're people who committed to the skill, did the work, and changed what their income looks like without quitting anything before they were ready.
-
-Closing is learnable. It is not a personality type."
-
-SECTION 7: RISK REVERSAL
-
-"If you show up, do the work, complete the program, and you don't feel equipped to start closing, we work with you until you are."
-
-SECTION 8: CTA
-
-"Below this video there's a button to book a free 20-minute strategy call.
-
-Every cohort is capped because the coaching quality only holds at a certain size.
-
-The people earning well right now aren't smarter than you. They just stopped waiting for the right moment and made one."
-
-[END CARD]
-EliteCloser Sales Accelerator
-8 Weeks. One Skill. Income That Doesn't Have a Ceiling.`},
-    {label:"Strategy Notes",num:"Notes",isNotes:true,content:`The proof section is where this script lives or dies on real content. The Indian coaching audience has seen enough vague before-and-afters to smell one immediately.
-
-The part-time-to-full-time story is the most important one to have. It directly addresses the single biggest objection: "I can't take the risk of quitting my job."
-
-On tone: the Indian high-ticket coaching space is saturated with over-promised VSLs. This script deliberately goes the other direction: grounded, acknowledges real fear, never asks anyone to leap before they're ready.
-
-Signature line: "One skill. No ceiling."`}
-  ]}
+  {id:1,company:"EmberBottle",industry:"Consumer Products / Drinkware",copyType:"Facebook Ad Copy",group:"Ad",tabs:[{label:"Office — The Grind",num:"Variation 01",content:`STATIC POSTER VISUAL\nBackground: person hunched at a laptop, mid-grind, blurred. Screen glow on their face.\nForeground: EmberBottle sharp, still, amber light pulsing quietly. Nobody's looking at it. Waiting. Still perfect.\n\nOne line: "Your work can wait. Your coffee shouldn't have to."\nSmall brand tag: EMBERBOTTLE  ALWAYS A PERFECT SIP.\n\nFACEBOOK REEL SCRIPT\n\nScene: Office. Guy walks in, fresh coffee in hand. Manager appears before he sits down. He's gone.\nCamera stays on the desk. His coffee just sitting there. His colleague's EmberBottle, amber light blinking. Unbothered.\nSeven minutes later he's back. Takes a sip. Fine. Just not what it was.\nHe glances at the bottle. His colleague sips slow, exhales like it's the first one.\n\nHim: "Still good?"\nColleague holds it out. "Three hours."\n\nCut to black.\nEmberBottle.\nALWAYS A PERFECT SIP.`},{label:"Gym — The Earned Drink",num:"Variation 02",content:`STATIC POSTER VISUAL\nBackground: gym floor, weights blurred out, that post-workout haze.\nForeground: EmberBottle sharp, cold condensation, sitting on a bench like it owns the place.\n\nOne line: "Your workout was hard enough. Your drink shouldn't be a letdown too."\n\nFACEBOOK REEL SCRIPT\n\nScene: Gym floor. Guy deep in a set. Two bros hyping him through the last rep.\nSet done. He reaches for his bottle. Post workout electrolytes. He earned this.\nTakes a sip. Pulls a face. Warm. Wrong warm. He forces it down.\nHis boy across the bench reaches into his bag, pulls out his EmberBottle, holds it out.\nGuy sips. Ice cold. Exactly right. His whole face resets.\nHis boy shrugs like YEAH. I know.\n\nCut to black.\nEmberBottle.\nALWAYS A PERFECT SIP.`},{label:"Strategy Notes",num:"Notes",isNotes:true,content:`Each ad targets a distinct identity your audience holds: the corporate professional, the gym guy, the traveller. People don't buy products, they buy things that feel made for them specifically.\n\nRunning all three as an A/B/C test tells you which identity your cold audience connects with most.\n\nThe creative approach is the same across all three: no one is sold to. The product shows up the way a good friend would, quietly, at exactly the right moment. That's intentional.`}]},
+  {id:2,company:"SyncDesk",industry:"SaaS / Productivity",copyType:"Landing Page",group:"Landing",tabs:[{label:"Full Page Copy",num:"Landing Page",content:`HERO\nYour team isn't the problem. Your tools are.\n\nSyncDesk connects Slack, Notion, Google Workspace, and your CRM into one place so your team actually works instead of managing the chaos between apps.\n\nStart Free, No Card Required. 14-day trial. Full access.\n\nPROBLEM SECTION\nSomeone made a decision in Slack. Nobody updated Notion. The task exists in three different places and is owned by nobody. And somehow the first thirty minutes of Monday are just everyone trying to figure out where last week ended.\n\nThat's not a people problem. That's what happens when five tools aren't talking to each other.\n\nSOLUTION SECTION\nOne workspace. Everything connected. Nothing that needs babysitting.\n\nSyncDesk doesn't replace the tools your team already uses. It connects them. Tasks get created, assigned, and tracked automatically.\n\nNo dev setup. No config calls. Pre-built workflows live in minutes.\n\nCLOSING CTA\nStop managing your tools. Start running your team.\n\n2,000+ teams stopped losing work to the gaps between apps.\n\nStart Your Free 14-Day Trial`},{label:"Strategy Notes",num:"Notes",isNotes:true,content:`The hero lost the subheadline clutter and became a single punch followed by one clean supporting line.\n\nThe problem section is where the biggest gain happened. "Overhead wearing a workflow's clothes" is the kind of slightly imperfect line that sticks.\n\nThe villain throughout is the fragmented tool stack, never the team, never the person reading. That's the through line that makes someone feel understood before they're sold anything.`}]},
+  {id:3,company:"FlowPilot",industry:"SaaS / Workflow Automation",copyType:"Cold Email Sequence",group:"Email",tabs:[{label:"Email 1 — The Hook",num:"Day 0",content:`Subject: The task is still in your Slack. From Tuesday.\n\nHi [First Name],\n\nYour team didn't drop the ball. The ball just never got picked up.\n\nSomeone brought it up in a thread, three people reacted with a thumbs up, and then Slack moved on. No ticket. No owner. No follow-up.\n\nThat's not a people problem. That's just how Slack works. It's built for conversation, not accountability.\n\nFlowPilot watches your Slack conversations and turns what gets decided into what gets done, automatically pulling out action items, putting them in front of the right person.\n\nTakes 3 minutes to connect. [14-day free trial, no card]\n\n[Your Name]\nFlowPilot\n\nP.S. The task from Tuesday is still there if you want to find it. Third thread down, buried under the standup bot.`},{label:"Email 2 — The Nudge",num:"Day 3-4",content:`Subject: Still losing tasks in Slack?\n\nHi [First Name],\n\nQuick one.\n\nIf nothing's changed since my last email, decisions still getting lost, someone still playing unofficial task tracker, the trial is still there whenever it makes sense.\n\nNo re-pitch. Just a genuine "this is worth 3 minutes of your time if the problem still exists."\n\n[Start free trial] or [grab a 15-min demo]\n\n[Your Name]\n\nP.S. Full access. 14 days. No card.`},{label:"Email 3 — The Exit",num:"Day 7-8",content:`Subject: You know where we are\n\nHi [First Name],\n\nThis is the last time I'll reach out, and I'm okay with that.\n\nFlowPilot works best for people who already feel the problem. If you haven't felt it yet, the timing just isn't right.\n\nBut if there's a part of you that knows your team is one bad sprint away from things getting messy, that's exactly who this was built for.\n\n14 days, free, no card. It's there when you're ready.\n\n[Your Name]\n\nP.S. The teams that find us usually say they wish they hadn't waited as long as they did.`},{label:"Strategy Notes",num:"Notes",isNotes:true,content:`Email 1 opens by defending the reader before they feel accused. Pain first, solution almost incidental.\n\nEmail 2 is six lines. Respects that they've already seen your pitch and don't need it again.\n\nEmail 3 is confident, not apologetic. "Works best for people who already feel the problem" makes the reader ask themselves if they're that person. They almost always are.\n\nKeep the reply-to a real name, not hello@. Cold emails from a human get opened, cold emails from a brand get deleted.`}]},
+  {id:4,company:"GrowthForge",industry:"B2B / Sales Consulting",copyType:"Cold Email Sequence",group:"Email",tabs:[{label:"Email 1 — Reality Check",num:"Day 0",content:`Subject: Your pipeline shouldn't feel like gambling\n\nHi [First Name],\n\nYou closed three deals last month and two the month before. Good numbers. But you have no real idea how to repeat that, and that's the actual problem.\n\nThat's not a pipeline, that's just luck with a CRM on top.\n\nThat's exactly the gap we work in at GrowthForge. If it's something you're thinking about, [grab 20 minutes].\n\n[Your Name]\nGrowthForge\n\nP.S. We only work with B2B SaaS teams of 5-50. If that's you, this will probably be the most useful 20 minutes you spend this month.`},{label:"Email 2 — The Reframe",num:"Day 3-4",content:`Subject: Re: Your pipeline shouldn't feel like gambling\n\nHi [First Name],\n\nThe problem isn't effort. It's that outbound is a system problem and you can't hire your way into a system you haven't built yet.\n\nThat gap gets more expensive every month it sits. Not dramatically, just quietly, predictably, until one bad quarter makes it very loud.\n\n[Grab 20 minutes] if any of that landed.\n\n[Your Name]`},{label:"Email 3 — The Exit",num:"Day 7-8",content:`Subject: Your pipeline won't fix itself\n\nHi [First Name],\n\nLast one, and I'll keep it honest.\n\nThe question is just whether the pipeline is keeping up with your growth, or quietly becoming the thing that slows everything else down.\n\nIf it's the latter, that doesn't fix itself. It just becomes the new normal until it isn't.\n\nWe're here when it stops feeling acceptable.\n\n[Your Name]`},{label:"Strategy Notes",num:"Notes",isNotes:true,content:`Email 1 opens with a specific, uncomfortable observation. "Luck with a CRM on top" stings because it's specific enough to be true.\n\nEmail 2 names the real problem: it's a system problem, not a headcount problem. You can't hire your way into a system you haven't built.\n\nEmail 3: "Becomes the new normal until it isn't" is the cost line, calm and inevitable. "When it stops feeling acceptable" makes them measure how acceptable it currently feels.`}]},
+  {id:5,company:"MetricFlow",industry:"SaaS / Marketing Analytics",copyType:"X / Twitter Ad Copy",group:"Ad",tabs:[{label:"Revenue Spike",num:"Variation 01",content:`STATIC POSTER VISUAL\nBackground: dark mode dashboard, blurred numbers everywhere, four different tabs open.\nForeground: one clean MetricFlow dashboard, single spike highlighted.\n\nOne line: "Everyone's guessing. You already know."\nSmall brand tag: METRICFLOW  ONE DASHBOARD.\n\nX REEL SCRIPT  No voiceover. Captions only. Fast cuts.\n\nScene 1: Slack blowing up. 11:58pm.\nCaption: "Revenue just spiked. Nobody knows why."\n\nScene 2: Four dashboards open. Numbers everywhere.\nCaption: "So you do what you always do."\n\nScene 3: Spreadsheet open. Coffee cold. Clock 1:14am.\nCaption: "Guess. Hope. Present it like you're sure."\n\nHard cut. MetricFlow. One campaign glowing as the source.\nCaption: "Or just know."\n\nCut to black.\nMetricFlow. One dashboard. 14-day free trial.`},{label:"Platform Wars",num:"Variation 02",content:`STATIC POSTER VISUAL\nOne line: "Three platforms. Three answers. One is lying."\n\nX REEL SCRIPT\n\nScene 1: Meta dashboard. Revenue up 34%.\nCaption: "Meta says it's working."\n\nScene 2: Google dashboard. Same period. Different number.\nCaption: "Google disagrees."\n\nScene 3: Spreadsheet open. Third number. Third story.\nCaption: "Your spreadsheet has its own opinion."\n\nScene 4: Someone presenting numbers in a meeting. Quietly not sure which are real.\nCaption: "So you pick the one that sounds best and move on."\n\nHard cut. MetricFlow. One screen. AI attribution. One number.\n\nCut to black.\nStop optimising by gut feel.\nMetricFlow. 14-day free trial. No card.`},{label:"Strategy Notes",num:"Notes",isNotes:true,content:`X rewards copy that doesn't feel like it was written by someone trying to sell you something. All three variations lean into that.\n\nVariation 1 works because the midnight metric spike isn't a hypothetical. It's a Tuesday for anyone running growth at scale.\nVariation 2 leans on the one thing every performance marketer quietly knows but never says: they're picking whichever number sounds best in the meeting.\n\nThe reel format is intentional. Captions only, no voiceover. X's feed moves fast and sound is off by default.`}]},
+  {id:6,company:"IronForge",industry:"Health and Fitness / Online Coaching",copyType:"Instagram Reel Script",group:"Video",tabs:[{label:"Full Script",num:"Reel Script",content:`IRONFORGE STRENGTH SYSTEM  INSTAGRAM REEL SCRIPT\nRuntime: 45-60 seconds | Tone: Direct, real, no hype\n\nHOOK A (to camera): "If you've been going to the gym for over a year and you still don't look like it, this is why."\n\nHOOK B (text overlay): "You're not lazy. Your program just sucks."\n\nBODY:\n"Here's what most guys do. They go to the gym 4, 5 times a week. They try random routines they found online. They're consistent for 3 weeks then something comes up, they lose momentum, and 6 months later they're basically starting over.\n\nThe problem isn't motivation. It's that there's no system. No progressive overload. No structure. No way to actually know if you're improving, so you never do."\n\nPIVOT:\n"IronForge is a 12-week strength system built around one thing: measurable progress, every single week."\n\nCTA (direct to camera):\n"Link in bio. 7-day free trial. Start this week. Or keep doing what you're doing and wonder why nothing's changing."\n\nCAPTION:\nMost guys aren't seeing progress because they're training without a system.\nIronForge fixes that. 12 weeks. Progressive overload built in.\n7-day free trial, link in bio.`},{label:"Strategy Notes",num:"Notes",isNotes:true,content:`The script leads with inconsistency because it's the less defensive entry. "Your program sucks" is easier to hear than "you're intimidated."\n\nThe ending deliberately uses a mild negative close because it works on this audience. It's a direct challenge that activates exactly the competitive instinct your target demographic responds to, without being condescending.\n\nOpen on a direct-to-camera talking head. No gym intro, no music montage. The hook has to land in 2 seconds before someone swipes. Return to face on the CTA. Eye contact closes harder than B-roll.`}]},
+  {id:7,company:"TaskZen",industry:"SaaS / Productivity",copyType:"Instagram Reel Script",group:"Video",tabs:[{label:"Full Script",num:"Reel Script",content:`STATIC POSTER VISUAL\nOne line: "You didn't waste today. Your tools did."\nSmall brand tag: TASKZEN  KNOW EXACTLY WHAT TO DO NEXT.\n\nINSTAGRAM REEL SCRIPT\nHandheld. Real. No voiceover. Just the sound of notifications.\n\nScene 1: 9am. Someone opens their laptop. Optimistic.\nCaption: "You had a plan."\n\nScene 2: Rapid cuts. Slack. Email. Calendar. Slack again. Six tabs.\nCaption: "Then Monday happened."\n\nScene 3: 5pm. Slumped. That specific exhaustion. Not tired from working. Tired from working at nothing.\nCaption: "Busy all day."\nCaption: "Nothing actually done."\n\nHard cut. TaskZen. One task highlighted. Not ten. One.\nCaption: "This is what clarity feels like."\n\nScene 4: Next morning. Opens TaskZen first. No chaos. Just starts.\nCaption: "Same person. Different tools."\n\nCut to black.\nYou didn't waste today. Your tools did.\nTaskZen  7 days free. Link in bio.`},{label:"Strategy Notes",num:"Notes",isNotes:true,content:`Hook opens on that 5pm moment, not the chaos, the aftermath. The blank stare at a laptop full of activity that produced nothing. That's the two seconds that stops the scroll.\n\nFast-cut screen recordings do the heavy lifting during the body section. Then one hard cut to TaskZen. One task. One clear answer. The contrast is the pitch.\n\nHook A "Busy all day. Nothing actually done." works best spoken to camera.\nHook B "You didn't waste today. Your tools did." runs better as a silent text overlay for cold audiences who've tried apps before and given up.`}]},
+  {id:8,company:"Atlas Supply Co.",industry:"Apparel / Performance Gear",copyType:"Welcome Email Sequence",group:"Email",tabs:[{label:"Email 1 — Welcome",num:"Day 0",content:`Subject: Welcome to Atlas.\n\nHey [First Name],\n\nGood to have you here.\n\nMost people find Atlas because they got tired of buying gear that looked great and fell apart in three months. Or gear that was built to perform but looked like it was designed by someone who's never actually been outside. That gap is exactly why Atlas exists.\n\nEverything we make is built to take real conditions. Early mornings, rough trails, long sessions, weather that doesn't care about your plans.\n\nNo seasonal drops engineered to go out of style. No inflated prices for a logo. Just gear that earns its place in your bag and stays there.\n\nThe Atlas Team\n\nP.S. If you're not sure what to grab first or have questions about fit and materials, just reply. A real person will get back to you.`},{label:"Email 2 — Best-Sellers",num:"Day 2",content:`Subject: The gear people actually come back for.\n\nHey [First Name],\n\nMost gear has one good season in it. Then slowly starts to let you down in small ways you almost don't notice until it's gone.\n\nAtlas pieces don't do that.\n\nPerformance Training Shirt: The one customers say they wish they'd bought three of on the first order. No tags, no bulk, nothing that bunches mid-session.\n\nDurable Training Pants: Four-way stretch, reinforced seams, pockets that actually hold things. Built for squats and trail runs in the same breath.\n\nAll-Weather Jacket: Wind-resistant, packable, earns a permanent spot in your bag because you never quite know when you'll need it.\n\nEvery piece ships when it's ready.\n\nThe Atlas Team`},{label:"Email 3 — Price Objection",num:"Day 4",content:`Subject: Is Atlas worth the price? Honest answer.\n\nHey [First Name],\n\nIt costs more than most. That's true and we're not going to dance around it.\n\nMost people who ask that question have already been through the cycle. Buy something cheaper, watch it pill and fade, replace it. Do that twice and you've spent Atlas money and had worse gear both times.\n\nAtlas is built to last years. Not seasons. Years.\n\n"I've had my Atlas training shirt for two years. Still looks new. Washed it probably 150 times." Marcus T.\n"Wore the jacket on a 3-day trail in variable weather. Performed exactly like the description." Jamie R.\n\nEvery purchase is backed by a straightforward guarantee. If something fails on our end, we make it right.\n\nThe Atlas Team`},{label:"Email 4 — First Purchase",num:"Day 6",content:`Subject: Your first Atlas order, make it count.\n\nHey [First Name],\n\nATLAS15 takes 15% off at checkout. Valid for the next 72 hours.\n\nNot sure where to start:\nTraining mostly in the gym? The Performance Shirt and Training Pants together.\nMostly outdoors or trail? Start with the All-Weather Jacket.\nBoth? The Training Shirt is your entry point.\n\nEvery order is backed by our guarantee.\n\nThe Atlas Team`},{label:"Strategy Notes",num:"Notes",isNotes:true,content:`Email 1 opens by naming exactly who finds Atlas and why. Recognition happens before any product is mentioned.\n\nEmail 2 describes each hero product by what it actually does for the person wearing them.\n\nEmail 3 names the price question directly. The cycle framing does the math for them.\n\nEmail 4: The discount arrives here, not in Email 1. A subscriber who's read three emails before seeing a code is a buyer, not a coupon hunter.`}]},
+  {id:9,company:"Northlane Apparel",industry:"Fashion / Streetwear",copyType:"Abandoned Cart Sequence",group:"Email",tabs:[{label:"Email 1 — Soft Reminder",num:"1-2 hrs",content:`Subject: Still yours. For now.\n\nHey [First Name],\n\nYou picked it for a reason.\n\nMost people scroll past. You stopped, you chose, you were close. The cart's still sitting there with your name on it.\n\nNorthlane runs limited quantities on every drop. No restocks once it's gone. When it sells out it's just gone. And the size you picked tends to go first.\n\n[PRODUCT IMAGE]\nComplete Your Order\n\nIf something stopped you, sizing, shipping, anything at all, just reply.\n\nNorthlane`},{label:"Email 2 — Value Push",num:"24 hrs",content:`Subject: While you were gone.\n\nHey [First Name],\n\nMost gear makes you choose. Either it performs or it looks right.\n\nThat's the gap Northlane sits in. Moisture-wicking, four-way stretch, cuts that move through a 6am session and still look deliberate at 8pm.\n\nThe piece in your cart was built around that exact idea. And because Northlane drops in limited quantities, what's sitting there now is genuinely what's left.\n\nReturn to My Cart\n\nNorthlane`},{label:"Email 3 — Final Nudge",num:"48-72 hrs",content:`Subject: Last one, and we're making it easier.\n\nHey [First Name],\n\nLast reminder, genuinely. FIRST10 takes 10% off at checkout. 24 hours.\n\nFree returns within 30 days if the fit isn't right. And when this drop sells out there's no restock.\n\nNorthlane`},{label:"Strategy Notes",num:"Notes",isNotes:true,content:`Email 1: Short, respectful, zero pressure. "You picked it for a reason" reframes the return as finishing something rather than starting something. No discount yet.\n\nEmail 2: For the person who's been comparing. The streetwear versus performance-gear tension is the exact conversation happening in their head.\n\nEmail 3: The discount arrives here, not before. Free returns earns its place because sizing anxiety is the silent killer of mid-premium apparel carts.`}]},
+  {id:10,company:"VitalRise",industry:"Health and Wellness / Supplements",copyType:"Promotional Email",group:"Email",tabs:[{label:"Version A — Cold List",num:"Cold List",content:`Subject: You're not tired. You're caffeinated wrong.\n\nHey [First Name],\n\nThe 3pm crash isn't a willpower problem. It's a caffeine problem.\n\nYou hit it hard in the morning, it works for a few hours, and then you're repaying the debt all afternoon. Foggy, slow, reaching for another cup that just pushes the crash back an hour. That's not an energy strategy. That's dependency with a productivity rebrand.\n\nVitalRise Daily Performance Capsules were built for the gap caffeine can't fill. Ashwagandha, rhodiola, B-vitamins. Clean energy from morning through the afternoon. No spike, no crash.\n\nIt feels like being yourself on a good day.\n\nThis week only: 20% off your first order with code RISE20.\n\nTry VitalRise: Claim 20% Off`},{label:"Version B — Warm List",num:"Warm List",content:`Subject: You're not tired. You're caffeinated wrong.\n\nHey [First Name],\n\nNext [X hours], VitalRise is 20% off. Code RISE20.\n\nIf you've been running on caffeine and hoping the crash doesn't hit before 5pm, it's for you. Adaptogens don't spike you and collect the debt later. Most people notice something different by day four.\n\nJust a version of your afternoon you've probably forgotten was possible.\n\nOffer closes [date]. 30-day money-back guarantee.`},{label:"Strategy Notes",num:"Notes",isNotes:true,content:`Version A earns the offer. It spends the whole email in the reader's experience before the product ever shows up. Right call for a colder list that hasn't built much trust yet.\n\nVersion B respects what a warm subscriber already knows. They're close to buying. They don't need the story, they need the signal that now is the right time.\n\nThe guarantee earns its place in both. First-time supplement buyers have been burned before and the money-back removes the only objection that actually stops them.`}]},
+  {id:11,company:"ScaleLab",industry:"Marketing / Business Growth",copyType:"Opt-in Page",group:"Landing",tabs:[{label:"Full Page Copy",num:"Opt-in Page",content:`SCALELAB OPT-IN PAGE\n\nYou don't have a client problem. You have a system problem.\n\nMost early-stage founders are good at the work. What nobody gave them was a pipeline that runs without them chasing it every week. So they chase it. And some weeks it works. And some weeks it doesn't. And the inconsistency becomes the thing that keeps them up at night.\n\nThe 5-Day Client Acquisition Blueprint is a zero-ads funnel framework. One lesson a day for five days. No paid campaigns. No tech stack. No complexity.\n\nWHAT YOU'LL GET\n\nDay 1: The real reason lead gen feels inconsistent.\nDay 2: Your funnel in plain language. Three parts.\nDay 3: The copy that actually converts.\nDay 4: The follow-up system that runs without you.\nDay 5: Your 30-day plan to have it live.\n\nWHO THIS IS FOR\nYou're one to three years in and clients still don't come consistently. You want something you can trust to still be working six months from now.\n\nWHO THIS ISN'T FOR\nAlready turning away more leads than you can handle? This isn't for you.\n\nFINAL CTA\nYour next client shouldn't be a mystery.\n\nYes, Send Me the Blueprint. Free. Instant delivery. No card required.`},{label:"Strategy Notes",num:"Notes",isNotes:true,content:`The whole page is built around three questions the reader asks silently in order: what do I get, is this actually for me, can I trust the person handing it to me.\n\nThe "not for you" section stays. It consistently lifts opt-in conversions, it signals confidence, and filters out people who won't engage with the sequence anyway. Makes the right person feel chosen rather than targeted.\n\nThe testimonials are mapped deliberately to three versions of the same person at different points in their frustration.`}]},
+  {id:12,company:"LumiSkin",industry:"Beauty and Skincare",copyType:"Instagram Ad Copy",group:"Ad",tabs:[{label:"Your Skin Was Never the Problem",num:"Variation 01",content:`STATIC POSTER VISUAL\nBackground: bathroom shelf, blurred, every product she's tried and given up on.\nForeground: LumiSkin sharp, morning light catching it just right.\n\nOne line: "Your skin was never the problem."\nSmall brand tag: LUMISKIN  GLOW DIFFERENT.\n\nINSTAGRAM REEL SCRIPT  UGC style. Handheld.\n\nScene 1: Someone scanning their face in the mirror. That quiet honest look everyone does alone.\nCaption: "I stopped expecting anything to actually work."\n\nScene 2: Shelf full of half-used serums. A hand picking up LumiSkin. Sceptical.\nCaption: "Tried this anyway."\n\nScene 3: Week 1. Week 2. Week 3. Skin getting quieter, less red, more even. Undeniably different.\nCaption: "Didn't wake up transformed. Just slowly started recognising myself again."\n\nCut to product.\nLast frame: Your skin was never the problem.\nLumiSkin: 20% off your first bottle.`},{label:"Same Routine. Glowing Different.",num:"Variation 02",content:`INSTAGRAM REEL SCRIPT\n\nScene 1: Girl doing her usual morning routine. Unbothered.\n\nScene 2: Friend leans in, genuinely curious.\nFriend: "Wait, what's going on with your skin?"\nShe barely looks up.\nHer: "My serum."\nThat's it. No pitch. No explanation. Just: my serum.\n\nScene 3: Close-up. Natural light. Skin quietly glowing. Real.\nCaption: "Vitamin C. Niacinamide. 2-4 weeks."\n\nLast frame:\nGlowing different.\nLumiSkin: 20% off your first bottle.`},{label:"Strategy Notes",num:"Notes",isNotes:true,content:`Nobody is sold to in any of these. Variation 1 feels like something a real girl posted from her bathroom at 7am. Variation 2 lives entirely in two words, "my serum," because that's how this generation talks about things they genuinely like.\n\nTesting priority:\nVariation 1 to cold audiences first.\nVariation 2 to retargeting once they know the brand.\n\nThe signature line "Glowing different" runs through all three. Third time someone sees it they're finishing it before it hits the screen. That's when the brand starts to stick.`}]},
+  {id:13,company:"SwiftFix Plumbing",industry:"Home Services",copyType:"Google Search Ads",group:"Ad",tabs:[{label:"Ad Set 1 — Emergency",num:"Ad Set 01",content:`SWIFTFIX PLUMBING  GOOGLE SEARCH ADS\nBest for: "emergency plumber near me," "burst pipe," "plumber right now"\n\nHEADLINES (30 characters max each)\n1. SwiftFix — Here in 60 Min.\n2. Burst Pipe? We're Coming.\n3. No Wait. No Surprise Bill.\n4. Licensed. On Call 24/7.\n5. Fix It Right or It's Free\n6. Same-Day Repairs. Guaranteed.\n7. Available Right Now\n8. Leak? We're Already Moving.\n9. Upfront Price. No Surprises.\n\nDESCRIPTIONS (90 characters max each)\n1. Burst pipe. Blocked drain. Water heater gone. We're there in 60 minutes, every time.\n2. We tell you the price before we start. No hidden fees. Fix it right or the job is free.\n3. Licensed plumbers, on call 24/7. Leaks, clogs, emergencies handled fast and right.`},{label:"Ad Set 2 — Trust",num:"Ad Set 02",content:`SWIFTFIX PLUMBING  GOOGLE SEARCH ADS\nBest for: "reliable plumber," "plumber reviews," "best plumber near me"\n\nHEADLINES\n1. Fix It Right or It's Free\n2. 5-Star Rated. Local. Licensed.\n3. Price First. Work Second.\n4. No Surprises. Just Fixed.\n5. Trusted by Your Neighbours\n\nDESCRIPTIONS\n1. You get the price before we touch anything. No surprises. Fix it right or the job is free.\n2. Five-star rated by local homeowners. Licensed techs, same-day repairs, upfront quotes every time.`},{label:"Strategy Notes",num:"Notes",isNotes:true,content:`The keyword strategy runs in two clear lanes and they shouldn't bleed into each other.\n\nEmergency terms run on Exact and Phrase match with Max Conversions bidding. These are the highest-intent searches in the account. Nobody in an emergency is price shopping.\n\nThe negative keyword list needs to go in before the first impression is served. Block all learning-to-become-a-plumber queries from day one.\n\nExtensions aren't decoration. An ad with full extension coverage takes up more real estate on the results page and pushes competitors down.`}]},
+  {id:14,company:"WealthSpark",industry:"Finance / Investing",copyType:"Instagram Reel Script",group:"Video",tabs:[{label:"The Mirror World",num:"Script 01",content:`INSTAGRAM REEL SCRIPT: Cinematic. Quiet. Feels like a short film.\n\nScene 1: Couch. Night. He closes the trading app. Stares at nothing. That hollow quiet.\n\nScene 2: TV flickers on. The screen shows him, same room. But this version is leaning forward. Actually doing something.\nCaption: "Who is that?"\n\nScene 3: He walks toward the TV, reaches out and falls through.\n\nScene 4: Mirror world. His other self turns around. Holds up the phone. WealthSpark open.\nOther him: "Three questions. That's all it asked."\n\nScene 5: Goals. Timeline. Risk comfort. Portfolio built. Simple.\nHim: "That's it?"\nOther him shrugs. Hands him the phone.\n\nScene 6: He snaps back to the couch. WealthSpark open. He starts.\n\nCut to black.\nTurns out the hard part wasn't investing.\nIt was finding WealthSpark.\nDownload free. Link in bio.`},{label:"The Reality Check",num:"Script 02",content:`INSTAGRAM REEL SCRIPT: Fast cuts. Captions carry everything.\n\nScene 1: Salary notification hits.\nCaption: "Salary credited."\n\nScene 2: Transfers to savings. Feels responsible.\nCaption: "Savings done."\n\nScene 3: Opens investing app. Immediately overwhelmed. Closes it.\nCaption: "Investing? ...later."\n\nScene 4: Text on screen.\nCaption: "Your savings account gives you 3%."\nCaption: "Inflation takes 6%."\nCaption: "You're losing money by doing nothing."\n\nScene 5: That quiet realisation.\nCaption: "Nobody told me that."\n\nScene 6: WealthSpark opens. Portfolio builds.\nCaption: "3 minutes. First portfolio. Done."\n\nCut to black.\nThe best time was last year.\nYou're still early.\nWealthSpark: free download. Link in bio.`},{label:"Strategy Notes",num:"Notes",isNotes:true,content:`These scripts were built around a single emotional truth: not laziness, not disinterest, but the specific paralysis of wanting to do the right thing and having no clear entry point.\n\nScript 1 is the cinematic one. The mirror world concept externalises an internal conversation everyone's already having. The "close the app and do nothing" beat gets a full second of silence. Don't cut there.\n\nScript 2 is the fast one. The emotional pivot from "feels responsible" to "oh, I'm actually losing money" needs to land in a single cut.\n\nOn compliance: all end cards and captions should carry the SEBI-required disclaimer.`}]},
+  {id:15,company:"GlowNest",industry:"Beauty and Personal Care",copyType:"TikTok UGC Script",group:"Video",tabs:[{label:"The Before / After Story",num:"Script 01",content:`TIKTOK SCRIPT "The Before/After Story"\nUGC. Bathroom or bedroom. Real light. Handheld.\n\n"I was spending $150 a month on facials. Then I found this."\n[Holds up the GlowNest mask.]\n\n"Dull skin, these little breakouts that just lived on my face rent-free no matter what I tried. I went through a whole shelf of stuff. Nothing."\n\n"Someone told me to try an LED mask and I thought: sure, I'll look completely unhinged, why not."\nCaption: "The unhinged era."\n\n"Three weeks. My skin is more even, the texture is actually smooth, and the spots genuinely fading. 10 minutes a day. Red light builds collagen, blue light handles the acne."\n\n[Takes mask off. Faces camera.]\nCaption: "3 weeks of daily use."\n\n"It's what $150 a month of facials was supposed to do. Except I own it now."\nCaption: "10 min/day. That's it."\n\nDelivery note: Say the last line quietly, almost to yourself. Not a sales line. A realisation.`},{label:"The Educational Hook",num:"Script 02",content:`TIKTOK SCRIPT "The Educational Hook"\n\n"Dermatologists have been using LED light therapy for years. Here's why you can do it at home now for under $100."\n\nCaption: "Red light, collagen and glow."\n"Red light goes deep into the skin and triggers collagen production. That's what reduces fine lines and gives you that plump, healthy look that's hard to fake with products alone."\n\nCaption: "Blue light, kills acne bacteria."\n"Blue light works on the surface. Targets the bacteria that cause breakouts."\n\n"The problem was always access. One LED session at a dermatologist runs $75 to $150."\n\n"GlowNest puts both wavelengths into one mask. Ten minutes a day, at home."\n\n"Same science. Same wavelengths. You just own the tool instead of renting the appointment."\n\nDelivery note: "Own the tool instead of renting the appointment." Say it like you just thought of it. That's the tone that gets this one shared.`},{label:"Strategy Notes",num:"Notes",isNotes:true,content:`The three scripts are built around one reframe: the reason someone hasn't tried LED therapy isn't scepticism about whether it works. It's that it always felt like something you had to book, travel to, and pay a clinic to do. The access was the barrier, not the belief.\n\nScript 1 leads. UGC story format is the highest-converting cold audience entry point for skincare DTC on TikTok.\n\nScript 2 is the saveable one. This audience fills in the rest themselves and shares it because it made them feel informed, not sold to.\n\nOn compliance: no script should claim the mask treats or cures acne. Every result is framed as personal experience.`}]},
+  {id:16,company:"FlowPilot",industry:"SaaS / Workflow Automation",copyType:"Video Ad Scripts",group:"Video",tabs:[{label:"The Tab Counter",num:"Script 01",content:`FLOWPILOT  SAAS AD SCRIPT — YouTube pre-roll, LinkedIn.\n\nOpens on screen recording. Real desktop. Eleven tabs. Slack pinging.\nCaption: "How many tabs do you have open right now?"\n\nVO: "Most business teams are running on six, seven, maybe eight different tools. And spending half their day manually moving information between them."\n\nVO: "Lead comes in. Someone updates the CRM. Someone else sends the follow-up. Someone else updates the tracker. Manually. Every time."\n\n[Cut to FlowPilot. Clean. Drag and drop. Workflow building in seconds.]\nVO: "FlowPilot connects all of it and automates the handoffs. One system, nothing manual."\n\nVO: "Free 14-day trial at FlowPilot.com. Ten minutes to set up."`},{label:"Monday Morning",num:"Script 02",content:`FLOWPILOT  SAAS AD SCRIPT — Instagram / Facebook retargeting.\n\nOpens on someone at their desk. Coffee in hand. That specific Monday morning face.\nCaption: "47 unread emails. Three reports that were due Friday."\n\nVO: "For most ops and marketing teams, half the week is just admin. Copying data from one tool to another. Chasing people for updates. Running reports that could run themselves."\n\nVO: "It's not that the team isn't working. It's that the system is making them do work that shouldn't be theirs."\n\n[Cut to FlowPilot. Tasks assigning themselves. Reports generating.]\nVO: "FlowPilot automates all of it. No code. Works with the tools you're already using."\n\n[Pause.]\nVO: "14-day free trial. No card required."`},{label:"Strategy Notes",num:"Notes",isNotes:true,content:`All three scripts are built around the same core truth: the team isn't the problem, the system is. That's the reframe that makes a B2B ad feel like a relief instead of a pitch.\n\nScript 1 leads. The tab counter hook is the lowest-friction entry point.\n\nScript 2 is the retargeting script. "The system is making them do work that shouldn't be theirs" is the line that converts.\n\nThirty seconds is tight and it should stay that way. One problem, one solution, one CTA. Any additional feature mentioned past the eighteen-second mark is a conversion killer.\n\nSignature line: "Stop doing work your system should be doing."`}]},
+  {id:17,company:"SendLoop",industry:"SaaS / Email Outreach",copyType:"Video Ad Scripts",group:"Video",tabs:[{label:"The Reply Rate Problem",num:"Script 01",content:`SENDLOOP  SAAS AD SCRIPT — YouTube pre-roll, LinkedIn.\n\nVO: "If your cold emails are getting under a 5% reply rate, the problem isn't your offer. It's your setup."\n\nVO: "Most business owners and agencies are still doing outreach the hard way. Templates that feel like templates. Follow-ups that go out late or don't go out at all. Deliverability issues that put you in spam before anyone reads a word."\n\n[Cut to SendLoop UI. Deliverability score moving into the green.]\nVO: "SendLoop fixes all three. Every email feels written for that person. Follow-ups run without you. And your emails actually land because deliverability is built in, not bolted on."\n\nVO: "Free trial at SendLoop.com. Your next reply is closer than you think."`},{label:"Scale Without Hiring",num:"Script 02",content:`SENDLOOP  SAAS AD SCRIPT — Facebook / Instagram, agency owners.\n\nVO: "You don't need to hire another person for outreach. You need a better system."\n\nVO: "Here's what I see constantly with agencies and B2B founders. They know email works. But their process is too manual to scale and too inconsistent to rely on."\nCaption: "Write it. Send it. Wait. Forget to follow up. Repeat."\n\nVO: "Pipeline dries up and the answer they reach for is another hire. It's not. It's the system."\n\n[Cut to SendLoop.]\nVO: "You just show up to the replies."\n\nVO: "Start free at SendLoop.com."`},{label:"Strategy Notes",num:"Notes",isNotes:true,content:`All three scripts are built around the same reframe: the reply rate isn't a writing problem or an offer problem. It's a setup problem. That removes the blame from the person running the outreach.\n\nScript 1 anchors the campaign. The deliverability angle is the sharpest edge and the one most competitors aren't leading with.\n\nScript 2 is for agency owners. "You just show up to the replies." Brief the talent to say it simply, almost like an afterthought. The less it sounds like a tagline the harder it lands.\n\nSignature line: "Everyone's sending. Not everyone's landing."`}]},
+  {id:18,company:"PeakMind Academy",industry:"Education / Online Courses",copyType:"Long-Form Sales Letter",group:"Strategy",tabs:[{label:"Full Sales Letter",num:"Sales Letter",content:`PEAKMIND ACADEMY  LONG-FORM SALES LETTER\n\nEvery focus tip you've ever tried was treating the symptom. Nobody went looking for the cause.\n\nYou sit down to study. You're ready this time. Genuinely. Two hours blocked out.\nTwenty minutes later you've watched something you didn't choose to watch, and the tab you actually needed is buried under six others.\n\nThat low, flat, foggy feeling settles back in.\n\nHere's what that feeling isn't: laziness. Weakness. A character flaw.\nHere's what it actually is: a brain that was never taught how to focus operating in an environment specifically engineered to make focusing harder.\n\nThat's not a motivational problem. That's a training problem. And training problems have solutions.\n\nWHY EVERYTHING YOU'VE TRIED HASN'T STUCK\nWillpower isn't a strategy. It's a resource. One that depletes. In a world where the most sophisticated attention-capture systems ever built are running in your pocket every waking hour, that resource is being drained faster than it can recover.\n\nThe top students don't do it on willpower. What they have is a set of cognitive habits that make deep focus their default rather than a daily battle.\n\nNobody teaches this in school. That's the gap PeakMind was built for.\n\nWHAT PEAKMIND ACTUALLY DOES\nA structured 21-day cognitive training program. Fifteen to twenty minutes a day. Done consistently.\n\nGetting into real focus within minutes. Retaining what you read the first time. The 2pm fog, gone. Procrastination losing its grip. Not through force. Because the resistance to starting genuinely decreases.\n\nTHE GUARANTEE\nComplete the first 21 days. Follow the system. If you don't notice a real improvement in your focus, contact us for a full refund. No conditions.\n\nYour brain was never the problem. It just never had a program.`},{label:"Strategy Notes",num:"Notes",isNotes:true,content:`On the opening: Leads with the scene, not the diagnosis. The reader sees themselves before they've decided whether to trust you.\n\nOn the reframe: "That's not a motivational problem, that's a training problem" is the load-bearing line of the letter. Everything before builds pressure, everything after offers direction.\n\nOn length: Every section has a job: identification, understanding, reframe, proof, social validation, risk removal, decision. Nothing is filler.\n\nOn the guarantee: Late placement signals confidence, not defensiveness.\n\nOn the closing: "Your brain was never the problem, it just never had a program" is the thesis of the entire letter in one sentence. Leave it alone.`}]},
+  {id:19,company:"InsightLoop",industry:"SaaS / Marketing Analytics",copyType:"Meta and LinkedIn Ad Copy",group:"Ad",tabs:[{label:"Meta Feed — DTC",num:"Ad 01",content:`INSIGHTLOOP  META FEED AD\n\nYou're spending $50k a month on ads.\nDo you actually know which ones are profitable?\n\nNot which ones are getting clicks. Which ones are generating real profit after returns, after shipping, after COGS.\n\nFor most DTC teams that answer lives somewhere between Meta's reporting, Google's reporting, Shopify's dashboard, and a spreadsheet nobody fully trusts anymore.\n\nInsightLoop pulls it all into one place. Meta, Google, Shopify, unified, profit-level attribution in real time.\n\n14-day free trial. Connect your accounts in under 10 minutes.\n\nSee What's Actually Working. Start Free.`},{label:"LinkedIn — Senior Buyer",num:"Ad 02",content:`INSIGHTLOOP  LINKEDIN FEED AD\n\nYour ad data isn't lying to you on purpose. But it is lying to you.\n\nMeta says your ROAS is 4.2. Google says 3.8. Your actual blended return after you back out returns, shipping, and COGS? Nobody knows for certain because nobody has a single source of truth.\n\nInsightLoop was built specifically for this.\n\nIt integrates Meta Ads, Google Ads, and Shopify into one unified attribution view, profit-level, not platform-reported.\n\nThe AI layer flags wasted spend automatically, identifies which creative patterns are actually driving conversions, and tells you what to scale, cut, or test next.\n\nFull access. No analyst required. Free for 14 days.`},{label:"Strategy Notes",num:"Notes",isNotes:true,content:`All three ads are built around the same core truth: the data your team is making decisions from isn't wrong because nobody's paying attention. It's wrong because every platform reports in a way that serves itself.\n\nAd 1 leads cold on Meta. The hook separates clicks and CTR from profit immediately. That distinction is the whole product in one sentence.\n\nAd 2 is the LinkedIn version for the more senior buyer. The ROAS discrepancy framing validates an experience every performance lead has had and never seen named cleanly in an ad.\n\nSequencing: Ad 1 cold, retargeting to anyone who engaged, Ad 2 running parallel on LinkedIn.`}]},
+  {id:20,company:"EliteCloser",industry:"Finance / Sales Education",copyType:"VSL Script",group:"Strategy",tabs:[{label:"Hook and Problem",num:"Sec 1-2",content:`ELITECLOSER SALES ACCELERATOR  VSL SCRIPT\n\nSECTION 1: HOOK\n\n"There's a skill you can learn in 8 weeks that pays one lakh to five lakh a month, from your laptop, from anywhere, without a degree, without a product, and without any background in sales.\n\nRight now, the biggest coaches, consultants, and agency owners in India are actively looking for people who have this skill. Not finding enough of them.\n\nThat skill is high-ticket closing."\n\nSECTION 2: THE PROBLEM\n\n"Are you earning what you're actually worth?\n\nMost people watching this are stuck in one of two places. Either in a job that pays just enough to stay but not enough to feel free. Or freelancing, building something, trying to make it work but the income is inconsistent.\n\nHere's what nobody says out loud: it's not because you're not talented.\n\nIt's because the skill you have right now has a ceiling built into it.\n\nA designer earns what designers earn. A developer earns what developers earn.\n\nBut a closer earns a percentage of every deal they close. And there is no ceiling on that."`},{label:"Reframe and Solution",num:"Sec 3-4",content:`SECTION 3: BREAKING THE LIMITING BELIEF\n\n"I know what some of you are thinking. 'I'm not a sales person.' 'I don't want to pressure anyone.'\n\nThis is not cold calling. It's not convincing someone to buy something they don't need.\n\nIt's a conversation. A structured, honest conversation, where your job is to help someone make a decision they've already been thinking about.\n\nAnd here's the part that matters if you're not ready to quit your job yet: you can start this part-time."\n\nSECTION 4: THE SOLUTION\n\n"EliteCloser is an 8-week program built to take someone with zero sales background and give them everything they need to close high-ticket offers professionally and consistently.\n\nWeeks one and two: the foundation.\nWeeks three and four: objection handling.\nWeeks five and six: live call simulations.\nWeeks seven and eight: placement and launch. Connected directly to coaches and agency owners actively looking for trained closers."`},{label:"Proof, Offer and CTA",num:"Sec 5-8",content:`SECTION 5: PROOF\n\n"[STUDENT RESULT 1] Real name, specific background, exact income before and after, timeline.\n[STUDENT RESULT 2] Someone with no sales experience at all.\n[STUDENT RESULT 3] Someone who started part-time while keeping their job.\n\nThese aren't outliers. They're people who committed to the skill, did the work, and changed what their income looks like without quitting anything before they were ready.\n\nClosing is learnable. It is not a personality type."\n\nSECTION 7: RISK REVERSAL\n\n"If you show up, do the work, complete the program, and you don't feel equipped to start closing, we work with you until you are."\n\nSECTION 8: CTA\n\n"Below this video there's a button to book a free 20-minute strategy call.\n\nEvery cohort is capped because the coaching quality only holds at a certain size.\n\nThe people earning well right now aren't smarter than you. They just stopped waiting for the right moment and made one."\n\n[END CARD]\nEliteCloser Sales Accelerator\n8 Weeks. One Skill. Income That Doesn't Have a Ceiling.`},{label:"Strategy Notes",num:"Notes",isNotes:true,content:`The proof section is where this script lives or dies on real content. The Indian coaching audience has seen enough vague before-and-afters to smell one immediately.\n\nThe part-time-to-full-time story is the most important one to have. It directly addresses the single biggest objection: "I can't take the risk of quitting my job."\n\nOn tone: the Indian high-ticket coaching space is saturated with over-promised VSLs. This script deliberately goes the other direction: grounded, acknowledges real fear, never asks anyone to leap before they're ready.\n\nSignature line: "One skill. No ceiling."`}]}
 ];
 
-/* ============ FILTER + RENDER ============ */
-let curFilter='all', curSearch='', openId=null;
+let curFilter='Email', curSearch='', openId=null;
 
 function getItems(){
   return DATA.filter(d=>{
@@ -2501,7 +760,6 @@ document.getElementById('srch').addEventListener('input',e=>{
   curSearch=e.target.value;openId=null;render();
 });
 
-/* ============ OVERLAY ============ */
 function openOv(id){
   const d=DATA.find(x=>x.id===id);
   const multi=d.tabs.length>1;
